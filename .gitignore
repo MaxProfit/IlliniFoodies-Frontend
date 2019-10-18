@@ -23,8 +23,6 @@ chrome-user-data
 *.swp
 *.swo
 
-react-app/build/
-
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
 packages/react-devtools-extensions/chrome/*.crx
