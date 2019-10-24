@@ -12,7 +12,7 @@ function App() {
           <li className="nav-item active"><a className="nav-link" href="#">Home</a></li>
           <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
           <li className="nav-item"><a className="nav-link" href="https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz">Log In</a></li>
-          <li className="nav-item"><button className="nav-link btn btn-outline-dark ml-2" href="https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz">Sign Up</button></li>
+          <li className="nav-item"><a className="nav-link btn btn-outline-dark ml-2" href="https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz">Sign Up</a></li>
         </ul>
       </nav>
 
