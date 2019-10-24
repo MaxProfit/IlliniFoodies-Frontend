@@ -20,3 +20,29 @@
 .App-link {
   color: #09d3ac;
 }
+
+.bg-react-dark {
+  background-color: #282c34;
+}
+
+.logo {
+  max-height: 30px;
+}
+
+.foodie-header {
+  background-image: url("./images/foodie-header_edited.jpg");
+  background-size: cover;
+
+  height: 600px;
+}
+
+.foodie-header form .input-group {
+  width: 75%;
+}
+
+.foodie-header input {
+  width: 50%;
+  height: 50px;
+}
+
+
