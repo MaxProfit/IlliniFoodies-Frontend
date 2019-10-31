@@ -48,7 +48,7 @@ function App() {
     <div className="App">
       <DemoPage></DemoPage>
 
-      <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"/>
+      <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" />
     </div>
   );
 }
@@ -154,14 +154,90 @@ class DemoPage extends React.Component {
       <div>
         <Navbar active={["", "", "", "", "", " active", ""]}></Navbar>
 
-        <div className="container mt-5 pt-5">
-          <form className="form-inline justify-content-around">
-            <DemoButton color="btn-outline-danger" id="insert"></DemoButton>
-            <DemoButton color="btn-outline-warning" id="update"></DemoButton>
-            <DemoButton color="btn-outline-success" id="delete"></DemoButton>
-            <DemoButton color="btn-outline-info" id="search"></DemoButton>
+        <DemoForm></DemoForm>
+      </div>
+    );
+  }
+}
+
+class DemoForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurant: null,
+      rating: null,
+      comment: null,
+      date: null,
+      user: null
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleRestaurantChange = this.handleRestaurantChange.bind(this);
+    this.handleRatingChange = this.handleRatingChange.bind(this);
+    this.handleCommentChange = this.handleCommentChange.bind(this);
+  }
+
+  handleSubmit() {
+    console.log(this.state)
+  }
+
+  handleRestaurantChange(event) {
+    this.setState({ restaurant: event.target.value , date: new Date()});
+  }
+  handleRatingChange(event) {
+    this.setState({ rating: event.target.value ,date: new Date()});
+  }
+
+  handleCommentChange(event) {
+    this.setState({ comment: event.target.value ,date: new Date()});
+  }
+
+  render() {
+    return (
+      <div className="container mt-5 pt-5">
+        <div className="row justify-content-center">
+          <form className="form-group mr-0 col-5">
+            <input
+              className="form-control"
+              placeholder="Restaurant"
+              onChange={this.handleRestaurantChange}
+            ></input>
+            <input
+              className="form-control"
+              placeholder="Rating"
+              onChange={this.handleRatingChange}
+            ></input>
+            <input
+              className="form-control"
+              placeholder="Comment"
+              onChange={this.handleCommentChange}
+            ></input>
+            <DemoButton
+              color="btn-outline-warning"
+              id="insert"
+              onClick={this.handleSubmit}
+            ></DemoButton>
+          </form>
+
+          <form className="form-group col-offset-2 col-5">
+            <input className="form-control" placeholder="Restaurant"></input>
+            <DemoButton color="btn-outline-success" id="search"></DemoButton>
           </form>
         </div>
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Restaurant</th>
+              <th>Rating</th>
+              <th>Comment</th>
+              <th>Date</th>
+              <th>User</th>
+            </tr>
+          </thead>
+
+          <tbody id="demo-table-body"></tbody>
+        </table>
       </div>
     );
   }
@@ -170,31 +246,18 @@ class DemoPage extends React.Component {
 class DemoButton extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    if(this.props.id == "insert") {
-      // sql
-    }
-    else if(this.props.id == "update") {
-      // sql
-    }
-    else if (this.props.id == "delete") {
-      // sql
-    }
-    else if (this.props.id == "search") {
-      // sql
-    }
-    else {
-      // sql
-    }
   }
 
   render() {
     return (
-      <button className={"btn " + this.props.color} id={this.props.id + "-button"} onClick={this.handleClick}>
-        {this.props.id.charAt(0).toUpperCase() + this.props.id.slice(1)}</button>
+      <button
+        className={"btn form-control " + this.props.color}
+        id={this.props.id + "-button"}
+        type="button"
+        onClick={this.props.onClick}
+      >
+        {this.props.id.charAt(0).toUpperCase() + this.props.id.slice(1)}
+      </button>
     );
   }
 }
