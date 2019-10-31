@@ -46,7 +46,7 @@ var topPicks = require("./data/topPicks.json");
 function App() {
   return (
     <div className="App">
-      <WelcomePage></WelcomePage>
+      <DemoPage></DemoPage>
 
       <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"/>
     </div>
@@ -149,10 +149,53 @@ class AboutPage extends React.Component {
 }
 
 class DemoPage extends React.Component {
-  redner() {
+  render() {
     return (
-      <Navbar active={["", "", "", "", "", " active", ""]}></Navbar>
-    )
+      <div>
+        <Navbar active={["", "", "", "", "", " active", ""]}></Navbar>
+
+        <div className="container mt-5 pt-5">
+          <form className="form-inline justify-content-around">
+            <DemoButton color="btn-outline-danger" id="insert"></DemoButton>
+            <DemoButton color="btn-outline-warning" id="update"></DemoButton>
+            <DemoButton color="btn-outline-success" id="delete"></DemoButton>
+            <DemoButton color="btn-outline-info" id="search"></DemoButton>
+          </form>
+        </div>
+      </div>
+    );
+  }
+}
+
+class DemoButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    if(this.props.id == "insert") {
+      // sql
+    }
+    else if(this.props.id == "update") {
+      // sql
+    }
+    else if (this.props.id == "delete") {
+      // sql
+    }
+    else if (this.props.id == "search") {
+      // sql
+    }
+    else {
+      // sql
+    }
+  }
+
+  render() {
+    return (
+      <button className={"btn " + this.props.color} id={this.props.id + "-button"} onClick={this.handleClick}>
+        {this.props.id.charAt(0).toUpperCase() + this.props.id.slice(1)}</button>
+    );
   }
 }
 
