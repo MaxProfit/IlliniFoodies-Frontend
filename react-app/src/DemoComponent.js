@@ -1,6 +1,7 @@
 import React from "react";
 
 var counter = 0;
+const axios = require('axios').default;
 
 export const DemoForm = class DemoForm extends React.Component {
   constructor(props) {
@@ -42,6 +43,19 @@ export const DemoForm = class DemoForm extends React.Component {
 
     // TODO: AXIOS REQUEST GOES HERE
     // The json object you have to pass to it is the var 'row'
+    axios.post('https://api.illinifoodies.xyz/ratings', {
+      CommentBody: this.state.comment, 
+      RestaurantName: this.state.restaurant,
+      Rating: this.state.rating,
+      DayPosted: this.state.date
+    })
+    .then(function (response) {
+      console.log("excuse me??");
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   updateRow() {
