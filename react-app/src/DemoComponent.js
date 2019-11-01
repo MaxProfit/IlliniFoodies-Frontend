@@ -52,28 +52,29 @@ export const DemoForm = class DemoForm extends React.Component {
   // get data from db and save db rows into component state, triggering table update in ui
   updateTable() {
     var self = this;
-    axios
-      .get("https://api.illinifoodies.xyz/ratings", {})
-      .then(function(response) {
-        console.log(response);
-        var newRows = [];
-        response.data.forEach(element => {
-          newRows.push({
-            id: element.Commentid,
-            restaurant: element.RestaurantName,
-            rating: element.Rating,
-            comment: element.CommentBody,
-            date: element.DayPosted
-          });
-        });
+    axios.get("https://api.illinifoodies.xyz/ratings", {
 
-        self.setState({
-          rows: newRows
+    })
+    .then(function(response) {
+      console.log(response);
+      var newRows = [];
+      response.data.forEach(element => {
+        newRows.push({
+          id: element.Commentid,
+          restaurant: element.RestaurantName,
+          rating: element.Rating,
+          comment: element.CommentBody,
+          date: element.DayPosted
         });
-      })
-      .catch(function(error) {
-        console.log(error);
       });
+
+      self.setState({
+        rows: newRows
+      });
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
   }
 
   // db + ui update fxns
