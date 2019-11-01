@@ -39,10 +39,8 @@ export const Navbar = class Navbar extends React.Component {
       return (
         <nav className="navbar navbar-expand-md navbar-light bg-light fixed-top pt-3">
           <Link to="/">
-            <a className="navbar-brand mr-auto" href="#">
               <img className="logo mr-3" src={require("./images/logo.png")}></img>
               Illini Foodies
-            </a>
           </Link>
           <button
             className="navbar-toggler"
@@ -58,9 +56,7 @@ export const Navbar = class Navbar extends React.Component {
 
             <Link to="/about">
               <li className={"nav-item" + this.props.active[1]}>
-                <a className="nav-link" href="#">
-                  About
-                </a>
+                About
               </li>
             </Link>
             
@@ -71,9 +67,7 @@ export const Navbar = class Navbar extends React.Component {
             </li>
             <Link to="/demo">
               <li className={"nav-item" + this.props.active[4]}>
-                <a className="nav-link" href="#">
-                  Demo
-                </a>
+                Demo
               </li>
               
             </Link>

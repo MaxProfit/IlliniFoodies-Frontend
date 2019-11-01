@@ -1,4 +1,5 @@
 import React from "react";
+import { element } from "prop-types";
 
 var counter = 0;
 const axios = require('axios').default;
@@ -35,6 +36,37 @@ export const DemoForm = class DemoForm extends React.Component {
     this.setState({ comment: event.target.value, date: new Date() });
   }
 
+  componentDidMount() {
+    var self = this;
+    axios.get('https://api.illinifoodies.xyz/ratings', {
+
+    })
+    .then(function (response) {
+      console.log(response);
+      var newRows = [];
+      response.data.forEach(element => {
+        var date = ""
+        if (element.DayPosted) {
+          date = element.DayPosted
+        }
+
+        newRows.push({
+          restaurant: element.RestaurantName,
+          rating: element.Rating,
+          comment: element.CommentBody,
+          date: date
+        })
+      });
+
+      self.setState({
+        rows: newRows
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
   insertRow() {
     var row = Object.assign({}, this.state);
     delete row["rows"];
@@ -50,7 +82,6 @@ export const DemoForm = class DemoForm extends React.Component {
       DayPosted: this.state.date
     })
     .then(function (response) {
-      console.log("excuse me??");
       console.log(response);
     })
     .catch(function (error) {
