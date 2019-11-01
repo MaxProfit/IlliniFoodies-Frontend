@@ -78,12 +78,13 @@ export const DemoForm = class DemoForm extends React.Component {
 
   // db + ui update fxns
   insertReview() {
+    console.log(new Date().toString())
     axios
       .post("https://api.illinifoodies.xyz/ratings", {
         CommentBody: this.state.comment,
         RestaurantName: this.state.restaurant,
         Rating: this.state.rating,
-        DayPosted: new Date().toDateString()
+        DayPosted: new Date().toString()
       })
       .then(response => {
         console.log(response);
@@ -128,9 +129,12 @@ export const DemoForm = class DemoForm extends React.Component {
   render() {
     return (
       <div className="container mt-5 pt-5">
+        <div className="row justify-content-center mb-3">
+          <h1>Illini Foodies SQL Demo</h1>
+        </div>
         <div className="row justify-content-center">
           {/* insert review form */}
-          <form className="form-group mr-0 col-5">
+          <form className="form-group mr-0 col-6">
             <input
               className="form-control"
               placeholder="Restaurant"
@@ -150,11 +154,12 @@ export const DemoForm = class DemoForm extends React.Component {
               color="btn-outline-warning"
               id="insert"
               onClick={this.insertReview}
+              text="Insert Review"
             ></DemoButton>
           </form>
 
           {/* search reviews form */}
-          <form className="form-group col-offset-2 col-5">
+          <form className="form-group col-6">
             <input
               className="form-control"
               placeholder="Restaurant"
@@ -164,13 +169,15 @@ export const DemoForm = class DemoForm extends React.Component {
               color="btn-outline-success"
               id="search"
               onClick={this.searchReviews}
+              text="Search Reviews"
             ></DemoButton>
           </form>
         </div>
 
+        <hr/> 
         {/* db ui representation as table */} 
-        <table className="table table-scroll table-hover">
-          <thead>
+        <table className="table table-hover">
+          <thead className="bg-dark text-white">
             <tr>
               <th>Restaurant</th>
               <th>Rating</th>
@@ -220,12 +227,12 @@ export const DemoButton = class DemoButton extends React.Component {
   render() {
     return (
       <button
-        className={"btn form-control " + this.props.color}
+        className={"btn w-100 " + this.props.color}
         id={this.props.id + "-button"}
         type="button"
         onClick={this.props.onClick}
       >
-        {this.props.id.charAt(0).toUpperCase() + this.props.id.slice(1)}
+        {this.props.text}
       </button>
     );
   }
