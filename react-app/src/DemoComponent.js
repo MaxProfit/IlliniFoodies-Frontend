@@ -3,8 +3,20 @@ import { element } from "prop-types";
 import { strict } from "assert";
 import "./App.css";
 
-var counter = 0;
 const axios = require("axios").default;
+
+// generic axios request
+function axiosRequest(request) {
+  console.log(request)
+  axios[request.type](request.url, request.data)
+    .then(function(response) {
+      console.log(response);
+      if (response.status == 200){
+        request.onSuccess(response);
+      }
+    })
+    .catch(error => console.log(error));
+}
 
 export const DemoForm = class DemoForm extends React.Component {
   constructor(props) {
@@ -14,17 +26,18 @@ export const DemoForm = class DemoForm extends React.Component {
       rating: null,
       comment: null,
       search: null,
+      commentUpdate: null,
       rows: []
     };
 
     this.insertReview = this.insertReview.bind(this);
-    this.updateTable = this.updateTable.bind(this);
     this.searchReviews = this.searchReviews.bind(this);
 
     this.handleRestaurantChange = this.handleRestaurantChange.bind(this);
     this.handleRatingChange = this.handleRatingChange.bind(this);
     this.handleCommentChange = this.handleCommentChange.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleCommentUpdate = this.handleCommentUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -49,85 +62,115 @@ export const DemoForm = class DemoForm extends React.Component {
     this.setState({ search: event.target.value });
   }
 
+  handleCommentUpdate(event) {
+    this.setState({ commentUpdate: event.target.value });
+  }
+
   // get data from db and save db rows into component state, triggering table update in ui
-  updateTable() {
-    var self = this;
-    axios.get("https://api.illinifoodies.xyz/ratings", {
-
-    })
-    .then(function(response) {
-      console.log(response);
-      var newRows = [];
-      response.data.forEach(element => {
-        newRows.push({
-          id: element.Commentid,
-          restaurant: element.RestaurantName,
-          rating: element.Rating,
-          comment: element.CommentBody,
-          date: element.DayPosted
+  updateTable(url="https://api.illinifoodies.xyz/ratings") {
+    axiosRequest({
+      type: "get",
+      url: url,
+      data: {},
+      onSuccess: function(response) {
+        console.log(response);
+        var newRows = [];
+        response.data.body.forEach(element => {
+          newRows.push({
+            id: element.Commentid,
+            restaurant: element.RestaurantName,
+            rating: element.Rating,
+            comment: element.CommentBody,
+            date: element.DayPosted
+          });
         });
-      });
 
-      self.setState({
-        rows: newRows
-      });
-    })
-    .catch(function(error) {
-      console.log(error);
+        this.setState({
+          rows: newRows
+        });
+      }.bind(this)
     });
   }
 
   // db + ui update fxns
   insertReview() {
-    console.log(new Date().toString())
-    axios
-      .post("https://api.illinifoodies.xyz/ratings", {
+    axiosRequest({
+      type: "post",
+      url: "https://api.illinifoodies.xyz/ratings",
+      data: {
         CommentBody: this.state.comment,
         RestaurantName: this.state.restaurant,
         Rating: this.state.rating,
         DayPosted: new Date().toString()
-      })
-      .then(response => {
-        console.log(response);
-        this.updateTable();
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+      },
+      onSuccess: this.updateTable.bind(this,  "https://api.illinifoodies.xyz/ratings")
+    });
   }
 
   updateReview(id) {
-    // TODO: AXIOS REQUEST GOES HERE
-
-    // HI GUYS OKIE WAIT
-    // so in insert review, i put this.updateTable when the promise is fulfilled, so when you guys
-    // write the axios request, move the "this.updateTable();" line to the then handler of the the promise
-    // thanks :DD -roshini
-    this.updateTable();
+    axiosRequest({
+      type: "put",
+      url: "https://api.illinifoodies.xyz/ratings",
+      data: { Commentid: id },
+      onSuccess: this.updateTable.bind(this, "https://api.illinifoodies.xyz/ratings")
+    });
   }
 
   deleteReview(id) {
-    // TODO: AXIOS REQUEST GOES HERE
-
-    // HI GUYS OKIE WAIT
-    // so in insert review, i put this.updateTable when the promise is fulfilled, so when you guys
-    // write the axios request, move the "this.updateTable();" line to the then handler of the the promise
-    // thanks :DD -roshini
-    this.updateTable();
+    axiosRequest({
+      type: "delete",
+      url: "https://api.illinifoodies.xyz/ratings/" + id,
+      data: {},
+      onSuccess: this.updateTable.bind(this, "https://api.illinifoodies.xyz/ratings")
+    });
   }
 
   searchReviews() {
-    // TODO: AXIOS REQUEST GOES HERE
-    console.log(this.state.search);
-
-    // HI GUYS OKIE WAIT
-    // so in insert review, i put this.updateTable when the promise is fulfilled, so when you guys
-    // write the axios request, move the "this.updateTable();" line to the then handler of the the promise
-    // thanks :DD -roshini
-    this.updateTable();
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/ratings/search/" + this.state.search,
+      data: {},
+      onSuccess: this.updateTable.bind(
+        this,
+        "https://api.illinifoodies.xyz/ratings/search/" + this.state.search
+      )
+    });
   }
 
   render() {
+    console.log(this.state.rows);
+    if (this.state.rows.length === 0) {
+      var tableRows = (
+        <tr>
+          <td>No data available! ヽ(　￣д￣)ノ</td>
+        </tr>
+      );
+    } else {
+      tableRows = this.state.rows.map(row => (
+        <tr key={row.id}>
+          <td>{row.restaurant}</td>
+          <td>{row.rating}</td>
+          <td>{row.comment}</td>
+          <td>{row.date}</td>
+          <td>
+            <button
+              type="button"
+              className="btn btn-dark btn-social-icon mr-1"
+              onClick={this.updateReview.bind(this, row.id)}
+            >
+              <i className="fa fa-pencil"></i>
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger btn-social-icon"
+              onClick={this.deleteReview.bind(this, row.id)}
+            >
+              <i className="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      ));
+    }
     return (
       <div className="container mt-5 pt-5">
         <div className="row justify-content-center mb-3">
@@ -135,7 +178,7 @@ export const DemoForm = class DemoForm extends React.Component {
         </div>
         <div className="row justify-content-center">
           {/* insert review form */}
-          <form className="form-group mr-0 col-6">
+          <form className="form-group mr-0 col-4">
             <input
               className="form-control"
               placeholder="Restaurant"
@@ -160,7 +203,7 @@ export const DemoForm = class DemoForm extends React.Component {
           </form>
 
           {/* search reviews form */}
-          <form className="form-group col-6">
+          <form className="form-group col-4">
             <input
               className="form-control"
               placeholder="Restaurant"
@@ -173,10 +216,24 @@ export const DemoForm = class DemoForm extends React.Component {
               text="Search Reviews"
             ></DemoButton>
           </form>
+
+          <form className="form-group col-4">
+            <input
+              className="form-control"
+              placeholder="Restaurant"
+              onChange={this.handleCommentUpdate}
+            ></input>
+            <DemoButton
+              color="btn-outline-info"
+              id="search"
+              onClick={this.updateComment}
+              text="Update Comment"
+            ></DemoButton>
+          </form>
         </div>
 
-        <hr/> 
-        {/* db ui representation as table */} 
+        <hr />
+        {/* db ui representation as table */}
         <table className="table table-hover">
           <thead className="bg-dark text-white">
             <tr>
@@ -188,32 +245,7 @@ export const DemoForm = class DemoForm extends React.Component {
             </tr>
           </thead>
 
-          <tbody>
-            {this.state.rows.map(row => (
-              <tr key={row.id}>
-                <td>{row.restaurant}</td>
-                <td>{row.rating}</td>
-                <td>{row.comment}</td>
-                <td>{row.date}</td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-dark btn-social-icon mr-1"
-                    onClick={this.updateReview.bind(this, row.id)}
-                  >
-                    <i className="fa fa-pencil"></i>
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-social-icon"
-                    onClick={this.deleteReview.bind(this, row.id)}
-                  >
-                    <i className="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{tableRows}</tbody>
         </table>
       </div>
     );
@@ -221,10 +253,6 @@ export const DemoForm = class DemoForm extends React.Component {
 };
 
 export const DemoButton = class DemoButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <button
