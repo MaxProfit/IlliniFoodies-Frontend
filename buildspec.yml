@@ -1,3 +1,8 @@
+# This yaml file will be run everytime someone pushes to master branch
+# it then runs this on our AWS code pipeline, and pipes all completed
+# artifacts to the S3 Bucket where our website is stored, then cloudfont
+# will gradually update the website throughout it's cache!
+
 version: 0.2
 
 phases:

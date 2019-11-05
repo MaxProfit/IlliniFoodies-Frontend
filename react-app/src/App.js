@@ -1,3 +1,5 @@
+'use strict';
+
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
@@ -7,9 +9,6 @@ import "typeface-roboto";
 import "font-awesome/css/font-awesome.min.css";
 import { Navbar } from "./BarComponent";
 
-
-
-
 function App() {
   return (
     <div className="App">
@@ -18,6 +17,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
