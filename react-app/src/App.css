@@ -46,6 +46,8 @@
   font-size: 10em;
   text-shadow: 4px 6px black;
   padding-bottom: 0.5em;
+  text-align: center;
+  margin-top: 0.5em;
 }
 
 .card {
