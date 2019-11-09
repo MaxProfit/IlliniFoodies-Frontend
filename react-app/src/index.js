@@ -20,7 +20,7 @@ const routing = (
       <Route path="/home" component={HomePage} />
       <Route path="/about" component={AboutPage} />
       <Route path="/demo" component={DemoPage} />
-      <Route path="/testing" component={SignUp} />
+      <Route path="/signup" component={SignUp} />
     </div>
   </Router>
 );
