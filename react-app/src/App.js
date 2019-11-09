@@ -8,12 +8,13 @@ import "bootstrap-social/bootstrap-social.css";
 import "typeface-roboto";
 import "font-awesome/css/font-awesome.min.css";
 import { Navbar } from "./BarComponent";
+import WelcomePage from "./WelcomePage";
+import SignUp from "./SignUp";
 
 function App() {
   return (
     <div className="App">
-      <Navbar active={[" active", "", "", "", "", "", ""]} />
-      
+      <SignUp></SignUp>
     </div>
   );
 }
