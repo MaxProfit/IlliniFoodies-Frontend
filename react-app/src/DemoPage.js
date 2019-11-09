@@ -1,13 +1,12 @@
 import React from 'react';
-import { Navbar } from './BarComponent';
-import { DemoForm } from './DemoComponent';
+import Navbar from './Navbar';
+import DemoForm from './DemoComponent';
 
 class DemoPage extends React.Component {
     render() {
       return (
         <div>
-          <Navbar active={["", "", "", "", "", " active", ""]}></Navbar>
-  
+          <Navbar></Navbar>
           <DemoForm></DemoForm>
         </div>
       );

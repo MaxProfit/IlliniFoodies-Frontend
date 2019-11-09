@@ -1,6 +1,4 @@
 import React from "react";
-import { element } from "prop-types";
-import { strict } from "assert";
 import "./App.css";
 
 const axios = require("axios").default;
@@ -11,14 +9,14 @@ function axiosRequest(request) {
   axios[request.type](request.url, request.data)
     .then(function(response) {
       console.log(response);
-      if (response.status == 200){
+      if (response.status === 200){
         request.onSuccess(response);
       }
     })
     .catch(error => console.log(error));
 }
 
-export const DemoForm = class DemoForm extends React.Component {
+class DemoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -252,7 +250,7 @@ export const DemoForm = class DemoForm extends React.Component {
   }
 };
 
-export const DemoButton = class DemoButton extends React.Component {
+class DemoButton extends React.Component {
   render() {
     return (
       <button
@@ -266,3 +264,5 @@ export const DemoButton = class DemoButton extends React.Component {
     );
   }
 };
+
+export default DemoForm;

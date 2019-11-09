@@ -1,15 +1,12 @@
 import React from "react";
-import { Navbar, InfoBar } from "./BarComponent";
+import Navbar from "./Navbar";
 import Slider from "@material-ui/core/Slider";
-import { strict } from "assert";
-
-
 
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
 
-    this.defaultPriceRange = [10, 20]
+    this.defaultPriceRange = [10, 20];
 
     this.state = {
       username: null,
@@ -54,7 +51,7 @@ class SignUp extends React.Component {
   }
 
   render() {
-    if (this.state.formState == 0) {
+    if (this.state.formState === 0) {
       var form = (
         <form className="rounded">
           <h1>What should we call you?</h1>
@@ -68,20 +65,20 @@ class SignUp extends React.Component {
             className="form-control mt-5 pt-2 w-100"
             onChange={this.handleNicknameChange}
             onKeyPress={event => {
-              if (event.key == "Enter") {
+              if (event.key === "Enter") {
                 this.nextForm();
               }
             }}
           ></input>
         </form>
       );
-    } else if (this.state.formState == 1) {
+    } else if (this.state.formState === 1) {
       const marks = [5, 10, 15, 20, 25, 30].map(tick => ({
         value: tick,
         label: "$" + tick.toString()
       }));
       form = (
-        <form className="rounded">
+        <form className="rounded d-flex flex-column align-items-center">
           <h1>How much are you willing to spend on food?</h1>
           <p>
             <i>Read: rate yourself on a scale from broke to not broke</i>
@@ -98,7 +95,7 @@ class SignUp extends React.Component {
             max={30}
           />
           <button
-            className="btn btn-dark mt-4"
+            className="btn btn-dark mt-4 w-25"
             type="button"
             onClick={this.submitUserSetup}
           >
@@ -106,19 +103,19 @@ class SignUp extends React.Component {
           </button>
         </form>
       );
-    } else if (this.state.formState == 2) {
+    } else if (this.state.formState === 2) {
       form = <h1>Okay, you're all set up {this.state.nickname}!</h1>;
     }
     return (
       <div className="bg-dark" style={{ height: "900px" }}>
-        <Navbar active={[" active", "", "", "", "", "", ""]}></Navbar>
+        <Navbar></Navbar>
 
         <div className="container mt-5 pt-5">
           <div
             className="d-flex justify-content-center align-items-center text-white rounded"
             style={{
               backgroundImage:
-                "linear-gradient(to bottom right, #00b4db, #0083b0)",
+                "linear-gradient(to top left, #00b4db, #0083b0)",
               height: "600px"
             }}
           >
