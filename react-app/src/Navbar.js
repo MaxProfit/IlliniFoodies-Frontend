@@ -11,7 +11,7 @@ class Navbar extends React.Component {
       links: linkNames.map(function(linkName) {
         if (linkName === "Log In") {
           var link =
-            "https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz";
+            "https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz/signup";
         } else {
           link = "/" + linkName.toLowerCase();
         }
