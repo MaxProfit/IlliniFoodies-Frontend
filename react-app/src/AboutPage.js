@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "./Navbar";
 
 class AboutPage extends React.Component {
   constructor(props) {
@@ -43,8 +42,6 @@ class AboutPage extends React.Component {
   render() {
     return (
       <div>
-        <Navbar></Navbar>
-
         <header className="custom-jumbotron bg-dark">
           <h1>Meet the Developers!</h1>
         </header>
