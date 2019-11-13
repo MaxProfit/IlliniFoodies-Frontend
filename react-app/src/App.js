@@ -4,6 +4,10 @@ import "./App.css";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Dropdown from "react-bootstrap/Dropdown";
+
 import HomePage from "./HomePage";
 import AboutPage from "./AboutPage";
 import DemoPage from "./DemoPage";
@@ -14,7 +18,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      user: null,
+      user: testUser,
       links: ["Home", "About", "Demo"]
     };
   }
@@ -36,9 +40,20 @@ class App extends React.Component {
       );
     } else {
       var userLink = (
-        <li key="user" className="nav-item nav-link mt-2">
-          <img className="navbar-image rounded-circle thumbnail ml-1" src={require("./images/missing2.png")}></img>
-          {this.state.user.nickname}
+        <li key="user" className="nav-item nav-link">
+          <Dropdown>
+            <Dropdown.Toggle variant="light">
+              <img
+                className="navbar-image rounded-circle thumbnail mr-1"
+                src={require("./images/missing2.png")}
+              ></img>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu alignRight>
+              <Dropdown.Item>{this.state.user.nickname}</Dropdown.Item>
+              <Dropdown.Item><i className="fa fa-sign-out"></i> Sign out</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </li>
       );
     }
@@ -55,22 +70,27 @@ class App extends React.Component {
       <div className="App">
         <Router>
           {/*Navbar*/}
-          <nav className="navbar navbar-expand-sm navbar-light bg-light fixed-top pt-3">
-            <Link to="/" className="btn-link">
-              <div className="d-flex flex-row">
-                <img
-                  className="navbar-image mr-3 ml-2 mt-1"
-                  src={require("./images/logo.png")}
-                ></img>
-                <h2 className="text-dark">Illini Foodies</h2>
-              </div>
-            </Link>
+          <Navbar bg="light" expand="sm" className="bg-light fixed-top pt-3">
+            <Navbar.Brand className="mr-auto">
+              <Link to="/" className="btn-link">
+                <div className="d-flex flex-row">
+                  <img
+                    className="navbar-image mr-3 ml-2 mt-1"
+                    src={require("./images/logo.png")}
+                  ></img>
+                  <h2 className="text-dark">Illini Foodies</h2>
+                </div>
+              </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="foodie-navbar" />
 
-            <ul className="navbar-nav ml-auto">
-              {navLinks}
-              {userLink}
-            </ul>
-          </nav>
+            <Navbar.Collapse id="foodie-navbar">
+              <Nav className="ml-auto">
+                {navLinks}
+                {userLink}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
 
           <Route exact path="/" component={HomePage} />
           <Route path="/home" component={HomePage} />
