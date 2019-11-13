@@ -18,7 +18,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      user: testUser,
+      user: null,
       links: ["Home", "About", "Demo"]
     };
   }
