@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "./Navbar";
 import Slider from "@material-ui/core/Slider";
 
 class SignUp extends React.Component {
@@ -22,6 +21,14 @@ class SignUp extends React.Component {
     this.submitUserSetup = this.submitUserSetup.bind(this);
     this.nextForm = this.nextForm.bind(this);
     this.prevForm = this.prevForm.bind(this);
+
+    // load user
+    var hashObject = {}
+    for (let info of window.location.hash.split("&")) {
+      let key_val = info.split("=")
+      hashObject[key_val[0]] = key_val[1].substring(1)
+    }
+    console.log(hashObject)
   }
 
   handleNicknameChange(event) {
@@ -40,6 +47,8 @@ class SignUp extends React.Component {
     };
     console.log(data);
     this.setState({ formState: 2 });
+
+    this.props.app.setState({user: data})
   }
 
   nextForm() {
@@ -104,18 +113,20 @@ class SignUp extends React.Component {
         </form>
       );
     } else if (this.state.formState === 2) {
-      form = <h1>Okay, you're all set up {this.state.nickname}!</h1>;
+
+      form = <div>
+        <h1>Okay, you're all set up {this.state.nickname}!</h1>
+      </div>;
     }
+
     return (
-      <div className="bg-dark" style={{ height: "900px" }}>
-        <Navbar></Navbar>
+      <div className="bg-dark" style={{ height: "900px" }} onLoad={this.loadUser}>
 
         <div className="container mt-5 pt-5">
           <div
             className="d-flex justify-content-center align-items-center text-white rounded"
             style={{
-              backgroundImage:
-                "linear-gradient(to top left, #00b4db, #0083b0)",
+              backgroundImage: "linear-gradient(to top left, #00b4db, #0083b0)",
               height: "600px"
             }}
           >
