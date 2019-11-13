@@ -47,6 +47,7 @@ class SignUp extends React.Component {
     };
     console.log(data);
     this.setState({ formState: 2 });
+
     this.props.app.setState({user: data})
   }
 
@@ -112,12 +113,15 @@ class SignUp extends React.Component {
         </form>
       );
     } else if (this.state.formState === 2) {
+
       form = <div>
         <h1>Okay, you're all set up {this.state.nickname}!</h1>
       </div>;
     }
+
     return (
       <div className="bg-dark" style={{ height: "900px" }} onLoad={this.loadUser}>
+
         <div className="container mt-5 pt-5">
           <div
             className="d-flex justify-content-center align-items-center text-white rounded"
