@@ -49,7 +49,11 @@ class SignUp extends React.Component {
         "https://api.illinifoodies.xyz/user/" +
         decodedToken.payload["cognito:username"],
       data: {},
-      onSuccess: response => (window.location.href = "/home")
+      onSuccess: response => {
+        if (response.data.Item !== undefined) {
+          window.location.href = "/home";
+        }
+      }
     });
 
     // save the user's aws cognito username in the component state
