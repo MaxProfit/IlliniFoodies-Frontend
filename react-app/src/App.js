@@ -20,26 +20,25 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      signedIn: false, // trigger to update app navbar, will be set in SignUp.js
       user: null,
       links: ["Home", "About", "Demo"]
     };
 
     this.signIn = this.signIn.bind(this);
-    this.signOut = this.signOut.bind(this); 
+    this.signOut = this.signOut.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
   }
 
   signOut() {
     // clear internal user state
-    this.setState({user: null})
+    this.setState({ user: null });
 
     // clear the cookie
     setCookie("userid", "");
-  };
+  }
 
   signIn(user) {
-    this.setState({user: user})
+    this.setState({ user: user });
   }
 
   createUserNavItem() {
@@ -60,7 +59,7 @@ class App extends React.Component {
       );
     }
 
-    // otherwise display the user menu 
+    // otherwise display the user menu
     else {
       return (
         <li key="user" className="nav-item nav-link">
@@ -74,9 +73,15 @@ class App extends React.Component {
 
             <Dropdown.Menu alignRight>
               <Dropdown.Header>{this.state.user.nickname}</Dropdown.Header>
-              <Dropdown.Item><i className="fa fa-heart text-danger mr-3"></i>Favorites</Dropdown.Item>
-              <Dropdown.Item><i className="fa fa-users text-primary mr-3"></i>Friends</Dropdown.Item>
-              <Dropdown.Item><i className="fa fa-cog text-dark mr-3"></i>Settings</Dropdown.Item>
+              <Dropdown.Item>
+                <i className="fa fa-heart text-danger mr-3"></i>Favorites
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <i className="fa fa-users text-primary mr-3"></i>Friends
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <i className="fa fa-cog text-dark mr-3"></i>Settings
+              </Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
               <Dropdown.Item onClick={this.signOut}>
                 <i className="fa fa-sign-out text-dark mr-2"></i> Sign out
@@ -86,21 +91,23 @@ class App extends React.Component {
         </li>
       );
     }
-
   }
 
   componentDidMount() {
-    console.log("IN COMPONENT DID MOUNT")
-    let userid = getCookie("userid")
-    console.log(userid)
+    console.log("IN COMPONENT DID MOUNT");
+    let userid = getCookie("userid");
+    console.log(userid);
     if (userid != "") {
       axiosRequest({
         type: "get",
-        url:
-          "https://api.illinifoodies.xyz/user/" + userid,
+        url: "https://api.illinifoodies.xyz/user/" + userid,
         data: {},
-        onSuccess: response => (this.setState({ user: response.data.Item }))
-      });  
+        onSuccess: response => {
+          if (response.data.Item !== undefined) {
+            this.setState({ user: response.data.Item });
+          }
+        }
+      });
     }
   }
 
@@ -108,7 +115,11 @@ class App extends React.Component {
     // map the navbar links to link components for rendering
     var navLinks = this.state.links.map(function(name) {
       return (
-        <Link key={name + "-link"} to={"/" + name} className="nav-item nav-link mt-2">
+        <Link
+          key={name + "-link"}
+          to={"/" + name}
+          className="nav-item nav-link mt-2"
+        >
           {name}
         </Link>
       );
