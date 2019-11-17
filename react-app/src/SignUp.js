@@ -1,28 +1,14 @@
+// NEW USER SIGN UP PAGE
 import React from "react";
 import Slider from "@material-ui/core/Slider";
+import { axiosRequest, setCookie } from "./Util";
 
-const axios = require("axios").default;
-const fs = require("fs");
 const jwt = require("jsonwebtoken");
-
-
-// generic axios request
-function axiosRequest(request) {
-  console.log(request);
-  axios[request.type](request.url, request.data)
-    .then(function(response) {
-      console.log(response);
-      if (response.status === 200) {
-        request.onSuccess(response);
-      }
-    })
-    .catch(error => console.log(error));
-}
-
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
 
+    // default price range for sign up price selector
     this.defaultPriceRange = [10, 20];
 
     this.state = {
@@ -31,7 +17,7 @@ class SignUp extends React.Component {
       priceMin: this.defaultPriceRange[0],
       priceMax: this.defaultPriceRange[1],
       picture: null,
-      formState: 0
+      currentForm: 0 // index of current slide in form
     };
 
     this.handleNicknameChange = this.handleNicknameChange.bind(this);
@@ -41,30 +27,39 @@ class SignUp extends React.Component {
     this.nextForm = this.nextForm.bind(this);
     this.prevForm = this.prevForm.bind(this);
 
-    // load user
-    var hashObject = {};
+    // parse the hash into an object
+    let hashObject = {};
     if (window.location.hash.length > 0) {
-      for (let info of window.location.hash.split("&")) {
+      let hash = window.location.href.substring(
+        window.location.href.indexOf("#") + 1
+      );
+      for (let info of hash.split("&")) {
         let key_val = info.split("=");
-        hashObject[key_val[0]] = key_val[1].substring(0);
+        hashObject[key_val[0]] = key_val[1];
       }
-      console.log(hashObject);
     }
 
-    function setCookie(cname, cvalue, exseconds) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exseconds*1000));
-      var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-    
-    // decode the token, grab the userid and save it in a cookie! nom 
-    var token = hashObject["#id_token"];
-    this.state.userid =  jwt.decode(token, {complete: true}).payload["cognito:username"];
-    console.log(jwt.decode(token, {complete: true}))
+    // decode the json web token
+    let decodedToken = jwt.decode(hashObject["id_token"], { complete: true });
+
+    // if the user already exists in our database, redirect to the home page
+    axiosRequest({
+      type: "get",
+      url:
+        "https://api.illinifoodies.xyz/user/" +
+        decodedToken.payload["cognito:username"],
+      data: {},
+      onSuccess: response => (window.location.href = "/home")
+    });
+
+    // save the user's aws cognito username in the component state
+    this.state.userid = decodedToken.payload["cognito:username"];
+
+    // also save it to a cookie! nom
     setCookie("userid", this.state.userid, hashObject["expires_in"]);
   }
 
+  // form input onChange handlers
   handleNicknameChange(event) {
     this.setState({ nickname: event.target.value });
   }
@@ -77,6 +72,7 @@ class SignUp extends React.Component {
     this.setState({ picture: event.target.value });
   }
 
+  // put the new user's data to the database
   submitUserSetup() {
     var data = {
       nickname: this.state.nickname,
@@ -84,29 +80,29 @@ class SignUp extends React.Component {
       priceMax: this.state.priceMax,
       picture: this.state.picture
     };
-
     axiosRequest({
       type: "put",
-      url: "https://api.illinifoodies.xyz/" + this.state.userid,
+      url: "https://api.illinifoodies.xyz/user/" + this.state.userid,
       data: data,
-      onSuccess: function(response) {
-        console.log(response);
-      }
+      onSuccess: response => this.props.signIn(data)
     });
 
     this.nextForm();
   }
 
+  // move to the next form in the form slideshow
   nextForm() {
-    this.setState({ formState: this.state.formState + 1 });
+    this.setState({ currentForm: this.state.currentForm + 1 });
   }
 
+  // move to the previous form in the form slideshow
   prevForm() {
-    this.setState({ formState: this.state.formState - 1 });
+    this.setState({ currentForm: this.state.currentForm - 1 });
   }
 
   render() {
-    if (this.state.formState === 0) {
+    // render the current form slide
+    if (this.state.currentForm === 0) {
       var form = (
         <form className="rounded">
           <h1>What should we call you?</h1>
@@ -127,7 +123,7 @@ class SignUp extends React.Component {
           ></input>
         </form>
       );
-    } else if (this.state.formState === 1) {
+    } else if (this.state.currentForm === 1) {
       form = (
         <form className="rounded d-flex flex-column align-items-center">
           <h1>Upload a profile picture?</h1>
@@ -143,7 +139,7 @@ class SignUp extends React.Component {
           />
         </form>
       );
-    } else if (this.state.formState === 2) {
+    } else if (this.state.currentForm === 2) {
       const marks = [5, 10, 15, 20, 25, 30].map(tick => ({
         value: tick,
         label: "$" + tick.toString()
@@ -174,7 +170,7 @@ class SignUp extends React.Component {
           </button>
         </form>
       );
-    } else if (this.state.formState === 3) {
+    } else if (this.state.currentForm === 3) {
       form = (
         <div>
           <h1>Okay, you're all set up {this.state.nickname}!</h1>
@@ -183,11 +179,7 @@ class SignUp extends React.Component {
     }
 
     return (
-      <div
-        className="bg-dark"
-        style={{ height: "900px" }}
-        onLoad={this.loadUser}
-      >
+      <div className="bg-dark" style={{ height: "900px" }}>
         <div className="container mt-5 pt-5">
           <div
             className="d-flex justify-content-center align-items-center text-white rounded"
