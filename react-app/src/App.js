@@ -13,6 +13,21 @@ import AboutPage from "./AboutPage";
 import DemoPage from "./DemoPage";
 import SignUp from "./SignUp";
 
+const axios = require("axios").default;
+
+// generic axios request
+function axiosRequest(request) {
+  console.log(request);
+  axios[request.type](request.url, request.data)
+    .then(function(response) {
+      console.log(response);
+      if (response.status === 200) {
+        request.onSuccess(response);
+      }
+    })
+    .catch(error => console.log(error));
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +39,13 @@ class App extends React.Component {
   }
 
   render() {
+    var user = axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/user/" + document.cookie.split("=")[1],
+      data: {},
+      onSuccess: (function(response) {console.log(response)})
+    })
+
     if (this.state.user == null) {
       var userLink = (
         <li key="login" className="nav-item nav-link">

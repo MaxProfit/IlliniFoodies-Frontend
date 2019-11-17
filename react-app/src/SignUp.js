@@ -1,6 +1,24 @@
 import React from "react";
 import Slider from "@material-ui/core/Slider";
 
+const axios = require("axios").default;
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+
+
+// generic axios request
+function axiosRequest(request) {
+  console.log(request);
+  axios[request.type](request.url, request.data)
+    .then(function(response) {
+      console.log(response);
+      if (response.status === 200) {
+        request.onSuccess(response);
+      }
+    })
+    .catch(error => console.log(error));
+}
+
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
@@ -8,27 +26,43 @@ class SignUp extends React.Component {
     this.defaultPriceRange = [10, 20];
 
     this.state = {
-      username: null,
+      userid: null,
       nickname: null,
-      minPrice: this.defaultPriceRange[0],
-      maxPrice: this.defaultPriceRange[1],
+      priceMin: this.defaultPriceRange[0],
+      priceMax: this.defaultPriceRange[1],
       picture: null,
       formState: 0
     };
 
     this.handleNicknameChange = this.handleNicknameChange.bind(this);
     this.handlePriceRangeChange = this.handlePriceRangeChange.bind(this);
+    this.handlePictureChange = this.handlePictureChange.bind(this);
     this.submitUserSetup = this.submitUserSetup.bind(this);
     this.nextForm = this.nextForm.bind(this);
     this.prevForm = this.prevForm.bind(this);
 
     // load user
-    var hashObject = {}
-    for (let info of window.location.hash.split("&")) {
-      let key_val = info.split("=")
-      hashObject[key_val[0]] = key_val[1].substring(1)
+    var hashObject = {};
+    if (window.location.hash.length > 0) {
+      for (let info of window.location.hash.split("&")) {
+        let key_val = info.split("=");
+        hashObject[key_val[0]] = key_val[1].substring(0);
+      }
+      console.log(hashObject);
     }
-    console.log(hashObject)
+
+    function setCookie(cname, cvalue, exseconds) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exseconds*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    
+    // decode the token, grab the userid and save it in a cookie! nom 
+    var token = hashObject["#id_token"];
+    this.state.userid =  jwt.decode(token, {complete: true}).payload["cognito:username"];
+    console.log(jwt.decode(token, {complete: true}))
+    setCookie("userid", this.state.userid, hashObject["expires_in"]);
   }
 
   handleNicknameChange(event) {
@@ -36,19 +70,31 @@ class SignUp extends React.Component {
   }
 
   handlePriceRangeChange(event, newPriceRange) {
-    this.setState({ minPrice: newPriceRange[0], maxPrice: newPriceRange[1] });
+    this.setState({ priceMin: newPriceRange[0], priceMax: newPriceRange[1] });
+  }
+
+  handlePictureChange(event) {
+    this.setState({ picture: event.target.value });
   }
 
   submitUserSetup() {
     var data = {
       nickname: this.state.nickname,
-      minPrice: this.state.minPrice,
-      maxPrice: this.state.maxPrice
+      priceMin: this.state.priceMin,
+      priceMax: this.state.priceMax,
+      picture: this.state.picture
     };
-    console.log(data);
-    this.setState({ formState: 2 });
 
-    this.props.app.setState({user: data})
+    axiosRequest({
+      type: "put",
+      url: "https://api.illinifoodies.xyz/" + this.state.userid,
+      data: data,
+      onSuccess: function(response) {
+        console.log(response);
+      }
+    });
+
+    this.nextForm();
   }
 
   nextForm() {
@@ -82,6 +128,22 @@ class SignUp extends React.Component {
         </form>
       );
     } else if (this.state.formState === 1) {
+      form = (
+        <form className="rounded d-flex flex-column align-items-center">
+          <h1>Upload a profile picture?</h1>
+          <input
+            className="form-control mt-5 pt-2 w-100"
+            onChange={this.handlePictureChange}
+            onKeyPress={event => {
+              if (event.key === "Enter") {
+                this.nextForm();
+              }
+            }}
+            placeholder="Enter direct url to the image (.jpg, .png, etc)"
+          />
+        </form>
+      );
+    } else if (this.state.formState === 2) {
       const marks = [5, 10, 15, 20, 25, 30].map(tick => ({
         value: tick,
         label: "$" + tick.toString()
@@ -112,16 +174,20 @@ class SignUp extends React.Component {
           </button>
         </form>
       );
-    } else if (this.state.formState === 2) {
-
-      form = <div>
-        <h1>Okay, you're all set up {this.state.nickname}!</h1>
-      </div>;
+    } else if (this.state.formState === 3) {
+      form = (
+        <div>
+          <h1>Okay, you're all set up {this.state.nickname}!</h1>
+        </div>
+      );
     }
 
     return (
-      <div className="bg-dark" style={{ height: "900px" }} onLoad={this.loadUser}>
-
+      <div
+        className="bg-dark"
+        style={{ height: "900px" }}
+        onLoad={this.loadUser}
+      >
         <div className="container mt-5 pt-5">
           <div
             className="d-flex justify-content-center align-items-center text-white rounded"
