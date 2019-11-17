@@ -13,6 +13,8 @@ import AboutPage from "./AboutPage";
 import DemoPage from "./DemoPage";
 import SignUp from "./SignUp";
 
+import { axiosRequest, setCookie, getCookie } from "./Util";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -21,11 +23,28 @@ class App extends React.Component {
       user: null,
       links: ["Home", "About", "Demo"]
     };
+
+    this.signIn = this.signIn.bind(this);
+    this.signOut = this.signOut.bind(this);
+    this.createUserNavItem = this.createUserNavItem.bind(this);
   }
 
-  render() {
-    if (this.state.user == null) {
-      var userLink = (
+  signOut() {
+    // clear internal user state
+    this.setState({ user: null });
+
+    // clear the cookie
+    setCookie("userid", "");
+  }
+
+  signIn(user) {
+    this.setState({ user: user });
+  }
+
+  createUserNavItem() {
+    // if the user is not signed in, display a login button
+    if (this.state.user === null) {
+      return (
         <li key="login" className="nav-item nav-link">
           <a
             className="btn text-white"
@@ -38,8 +57,11 @@ class App extends React.Component {
           </a>
         </li>
       );
-    } else {
-      var userLink = (
+    }
+
+    // otherwise display the user menu
+    else {
+      return (
         <li key="user" className="nav-item nav-link">
           <Dropdown>
             <Dropdown.Toggle variant="light">
@@ -50,17 +72,54 @@ class App extends React.Component {
             </Dropdown.Toggle>
 
             <Dropdown.Menu alignRight>
-              <Dropdown.Item>{this.state.user.nickname}</Dropdown.Item>
-              <Dropdown.Item><i className="fa fa-sign-out"></i> Sign out</Dropdown.Item>
+              <Dropdown.Header>{this.state.user.nickname}</Dropdown.Header>
+              <Dropdown.Item>
+                <i className="fa fa-heart text-danger mr-3"></i>Favorites
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <i className="fa fa-users text-primary mr-3"></i>Friends
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <i className="fa fa-cog text-dark mr-3"></i>Settings
+              </Dropdown.Item>
+              <Dropdown.Divider></Dropdown.Divider>
+              <Dropdown.Item onClick={this.signOut}>
+                <i className="fa fa-sign-out text-dark mr-2"></i> Sign out
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </li>
       );
     }
+  }
 
-    var navLinks = this.state.links.map(function(name, self = this) {
+  componentDidMount() {
+    console.log("IN COMPONENT DID MOUNT");
+    let userid = getCookie("userid");
+    console.log(userid);
+    if (userid != "") {
+      axiosRequest({
+        type: "get",
+        url: "https://api.illinifoodies.xyz/user/" + userid,
+        data: {},
+        onSuccess: response => {
+          if (response.data.Item !== undefined) {
+            this.setState({ user: response.data.Item });
+          }
+        }
+      });
+    }
+  }
+
+  render() {
+    // map the navbar links to link components for rendering
+    var navLinks = this.state.links.map(function(name) {
       return (
-        <Link to={"/" + name} className="nav-item nav-link mt-2">
+        <Link
+          key={name + "-link"}
+          to={"/" + name}
+          className="nav-item nav-link mt-2"
+        >
           {name}
         </Link>
       );
@@ -69,7 +128,6 @@ class App extends React.Component {
     return (
       <div className="App">
         <Router>
-          {/*Navbar*/}
           <Navbar bg="light" expand="sm" className="bg-light fixed-top pt-3">
             <Navbar.Brand className="mr-auto">
               <Link to="/" className="btn-link">
@@ -87,7 +145,7 @@ class App extends React.Component {
             <Navbar.Collapse id="foodie-navbar">
               <Nav className="ml-auto">
                 {navLinks}
-                {userLink}
+                {this.createUserNavItem()}
               </Nav>
             </Navbar.Collapse>
           </Navbar>
@@ -98,7 +156,7 @@ class App extends React.Component {
           <Route path="/demo" component={DemoPage} />
           <Route
             path="/signin"
-            component={() => <SignUp app={this}></SignUp>}
+            component={() => <SignUp signIn={this.signIn}></SignUp>}
           />
         </Router>
       </div>
