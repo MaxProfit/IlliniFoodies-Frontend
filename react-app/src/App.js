@@ -14,6 +14,7 @@ import DemoPage from "./DemoPage";
 import SignUp from "./SignUp";
 
 import { axiosRequest, setCookie, getCookie } from "./Util";
+import Modal from "react-bootstrap/Modal";
 
 class App extends React.Component {
   constructor(props) {
@@ -21,12 +22,23 @@ class App extends React.Component {
 
     this.state = {
       user: null,
-      links: ["Home", "About", "Demo"]
+      links: ["Home", "About", "Demo"],
+      showFriendsModal: false,
+      showFavoritesModal: false,
+      showSettingsModal: false
     };
 
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.toggleSettings = this.toggleSettings.bind(this);
+    this.toggleFavorites = this.toggleFavorites.bind(this);
+    this.toggleFriends = this.toggleFriends.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
+  }
+
+  signIn(user) {
+    // set the user state variable (this function is called through the signup page)
+    this.setState({ user: user });
   }
 
   signOut() {
@@ -37,8 +49,17 @@ class App extends React.Component {
     setCookie("userid", "");
   }
 
-  signIn(user) {
-    this.setState({ user: user });
+  // handlers to toggle the show/hide state variable for various user specific info modals
+  toggleFavorites(show) {
+    this.setState({ showFavoritesModal: show });
+  }
+
+  toggleFriends(show) {
+    this.setState({ showFriendsModal: show });
+  }
+
+  toggleSettings(show) {
+    this.setState({ showSettingsModal: show });
   }
 
   createUserNavItem() {
@@ -73,13 +94,13 @@ class App extends React.Component {
 
             <Dropdown.Menu alignRight>
               <Dropdown.Header>{this.state.user.nickname}</Dropdown.Header>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={this.toggleFavorites.bind(this, true)}>
                 <i className="fa fa-heart text-danger mr-3"></i>Favorites
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={this.toggleFriends.bind(this, true)}>
                 <i className="fa fa-users text-primary mr-3"></i>Friends
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={this.toggleSettings.bind(this, true)}>
                 <i className="fa fa-cog text-dark mr-3"></i>Settings
               </Dropdown.Item>
               <Dropdown.Divider></Dropdown.Divider>
@@ -94,9 +115,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log("IN COMPONENT DID MOUNT");
     let userid = getCookie("userid");
-    console.log(userid);
     if (userid != "") {
       axiosRequest({
         type: "get",
@@ -125,30 +144,54 @@ class App extends React.Component {
       );
     });
 
+    if (this.state.user != null) {
+      var settingsList = (
+        <dl>
+          <dt>Nickname</dt> <dd>{this.state.user.nickname}</dd>
+          <dt>Profile Picture URL</dt> <dd>{this.state.user.picture}</dd>
+          <dt>Preferred Price Range</dt>{" "}
+          <dd>
+            {"($" +
+              this.state.user.priceMin +
+              ", $" +
+              this.state.user.priceMax +
+              ")"}
+          </dd>
+        </dl>
+      );
+    }
+
     return (
       <div className="App">
         <Router>
-          <Navbar bg="light" expand="sm" className="bg-light fixed-top pt-3">
-            <Navbar.Brand className="mr-auto">
-              <Link to="/" className="btn-link">
-                <div className="d-flex flex-row">
-                  <img
-                    className="navbar-image mr-3 ml-2 mt-1"
-                    src={require("./images/logo.png")}
-                  ></img>
-                  <h2 className="text-dark">Illini Foodies</h2>
-                </div>
-              </Link>
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="foodie-navbar" />
+          <div className="fixed-top">
+            <Navbar
+              bg="light"
+              expand="sm"
+              className="bg-light navbar-sunkist fixed-top pt-3"
+            >
+              <Navbar.Brand className="mr-auto">
+                <Link to="/" className="btn-link">
+                  <div className="d-flex flex-row">
+                    <img
+                      className="navbar-image mr-3 ml-2 mt-1"
+                      src={require("./images/logo.png")}
+                    ></img>
+                    <h2 className="text-dark">Illini Foodies</h2>
+                  </div>
+                </Link>
+              </Navbar.Brand>
+              <Navbar.Toggle aria-controls="foodie-navbar" />
 
-            <Navbar.Collapse id="foodie-navbar">
-              <Nav className="ml-auto">
-                {navLinks}
-                {this.createUserNavItem()}
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
+              <Navbar.Collapse id="foodie-navbar">
+                <Nav className="ml-auto">
+                  {navLinks}
+                  {this.createUserNavItem()}
+                </Nav>
+              </Navbar.Collapse>
+            </Navbar>
+            <div className="bg-sunkist mt-5 pt-5 w-100 navbar-border"></div>
+          </div>
 
           <Route exact path="/" component={HomePage} />
           <Route path="/home" component={HomePage} />
@@ -159,6 +202,43 @@ class App extends React.Component {
             component={() => <SignUp signIn={this.signIn}></SignUp>}
           />
         </Router>
+
+        <Modal
+          show={this.state.showFavoritesModal}
+          onHide={this.toggleFavorites.bind(this, false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title> <i className="fa fa-heart text-danger mr-3"></i>Favorites</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <p>You have no favorites saved.</p>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          show={this.state.showFriendsModal}
+          onHide={this.toggleFriends.bind(this, false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title> <i className="fa fa-users text-primary mr-3"></i>Friends</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <p>You have no friends. <strong>QAQ</strong></p>
+          </Modal.Body>
+        </Modal>
+        
+        <Modal
+          show={this.state.showSettingsModal}
+          onHide={this.toggleSettings.bind(this, false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title> <i className="fa fa-cog text-dark mr-3"></i>Settings</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>{settingsList}</Modal.Body>
+        </Modal>
       </div>
     );
   }
