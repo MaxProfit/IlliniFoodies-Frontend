@@ -108,53 +108,31 @@ class SignUp extends React.Component {
     // render the current form slide
     if (this.state.currentForm === 0) {
       var form = (
-        <form className="rounded">
-          <h1>What should we call you?</h1>
-          <p>
-            <i>
-              Your friends will see this name when you interact on our social
-              pages
-            </i>
-          </p>
-          <input
-            className="form-control mt-5 pt-2 w-100"
-            onChange={this.handleNicknameChange}
-            onKeyPress={event => {
-              if (event.key === "Enter") {
-                this.nextForm();
-              }
-            }}
-          ></input>
-        </form>
+        <CustomForm
+          question="What should we call you?"
+          tip="Your friends will see this name when you interact on our social pages"
+          inputOnChange={this.handleNicknameChange}
+        ></CustomForm>
       );
     } else if (this.state.currentForm === 1) {
       form = (
-        <form className="rounded d-flex flex-column align-items-center">
-          <h1>Upload a profile picture?</h1>
-          <input
-            className="form-control mt-5 pt-2 w-100"
-            onChange={this.handlePictureChange}
-            onKeyPress={event => {
-              if (event.key === "Enter") {
-                this.nextForm();
-              }
-            }}
-            placeholder="Enter direct url to the image (.jpg, .png, etc)"
-          />
-        </form>
+        <CustomForm
+          question="Upload a profile picture?"
+          tip="Enter direct url to the image (.jpg, .png, etc.)"
+          inputOnChange={this.handlePictureChange}
+          inputPlaceholder="Enter direct url to the image (.jpg, .png, etc)"
+        ></CustomForm>
       );
     } else if (this.state.currentForm === 2) {
       const marks = [5, 10, 15, 20, 25, 30].map(tick => ({
         value: tick,
         label: "$" + tick.toString()
       }));
-      form = (
-        <form className="rounded d-flex flex-column align-items-center">
-          <h1>How much are you willing to spend on food?</h1>
-          <p>
-            <i>Read: rate yourself on a scale from broke to not broke</i>
-          </p>
-          <Slider
+      form = <CustomForm question="How much are you willing to spend on food?"
+        tip="Read: Rate yourself on a scale from broke to not broke"
+        customInput={
+          <div>
+            <Slider
             className="mt-5"
             onChange={this.handlePriceRangeChange}
             defaultValue={this.defaultPriceRange}
@@ -172,14 +150,11 @@ class SignUp extends React.Component {
           >
             Done
           </button>
-        </form>
-      );
+          </div>
+        }></CustomForm>
     } else if (this.state.currentForm === 3) {
-      form = (
-        <div>
-          <h1>Okay, you're all set up {this.state.nickname}!</h1>
-        </div>
-      );
+      form=<CustomForm question={"Okay, you're all set up " + this.state.nickname}
+      tip="We're redirecting you to our home page..."></CustomForm>
     }
 
     return (
@@ -196,6 +171,37 @@ class SignUp extends React.Component {
           </div>
         </div>
       </div>
+    );
+  }
+}
+
+class CustomForm extends React.Component {
+  render() {
+    if (this.props.inputOnChange != undefined) {
+      var interactiveInput = (
+        <input
+          className="form-control mt-5 pt-2 w-100"
+          onChange={this.props.inputOnChange}
+          onKeyPress={event => {
+            if (event.key === "Enter") {
+              this.nextForm();
+            }
+          }}
+          placeholder={this.props.inputPlaceholder}
+        />
+      );
+    } else {
+      interactiveInput = this.props.customInput;
+    }
+
+    return (
+      <form className="rounded d-flex flex-column align-items-center">
+        <h1>{this.props.question}</h1>
+        <p>
+          <i>{this.props.tip}</i>
+        </p>
+        {interactiveInput}
+      </form>
     );
   }
 }

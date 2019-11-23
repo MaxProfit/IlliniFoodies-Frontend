@@ -1,41 +1,17 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
-}
-
 .navbar-image {
   max-height: 30px;
 }
 
 .foodie-header {
-  background-image: url("./images/foodie-header_edited.jpg");
-  background-size: cover;
-
   width: 100%;
   height: 600px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.foodie-header form .input-group {
-  width: 75%;
-}
 
 .foodie-header input {
   width: 50%;
@@ -44,10 +20,8 @@
 
 .header-catch {
   color: white;
-  text-shadow: 4px 6px black;
-  padding-bottom: 0.5em;
-  text-align: center;
-  margin-top: 1em;
+  font-size: 11em;
+  margin-bottom: 0.5em;
 }
 
 .card {
@@ -56,8 +30,8 @@
 }
 
 .card img {
-  max-width: 100%;
-  max-height: auto;
+  height: 250px;
+  object-fit: cover;
 }
 
 .developer-card {
@@ -72,11 +46,32 @@
 
 .custom-jumbotron {
   padding: 2rem 1rem;
-  margin-bottom: 2rem;
-  margin-top: 4rem;
   color: white;
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
+}
+
+.bg-sunkist {
+  background-image: linear-gradient(to top,#f2994a,#f2c94c);
+}
+
+.navbar-border {
+  height: 1px;
+}
+
+.card-img-overlay {
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.658);
+
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.1s;
+}
+
+.card-img-overlay:hover {
+  opacity: 1;
+}
+
+.dev-card-img:hover {
+  filter: brightness(50%);
 }
 
 @media (min-width: 576px) {

@@ -1,4 +1,6 @@
 import React from "react";
+import Card from "react-bootstrap/Card";
+import "./App.css";
 
 class AboutPage extends React.Component {
   constructor(props) {
@@ -6,33 +8,29 @@ class AboutPage extends React.Component {
     this.developers = {
       Roshini: {
         name: "Roshini Saravanakumar",
-        role: "Frontend, UI/UX, Data Visualization, Databases",
-        tools: "React.js, Bootstrap, Pandas, AWS, SQL, Node.js, APIs",
+        role: "Front-End, UI/UX, Data Visualization, APIs",
         github: "https://github.com/roshinis78",
         website: "https://roshinis78.github.io/my-website",
         picture: "./images/roshini-profile.jpg"
       },
       Eunice: {
         name: "Eunice Zhou",
-        role: "fill this in",
-        tools: "fill this in",
-        github: "#",
+        role: "UI/UX",
+        github: "https://github.com/eunicornbread",
         website: "#",
         picture: "./images/eunice-profile.jpg"
       },
       Matthew: {
         name: "Matthew Williams",
-        role: "fill this in",
-        tools: "fill this in",
-        github: "#",
+        role: "Back-End, AWS, Architect",
+        github: "https://github.com/MaxProfit",
         website: "#",
         picture: "./images/matthew-profile.jpg"
       },
       Sam: {
         name: "Samuel Dovgin",
-        role: "fill this in",
-        tools: "fill this in",
-        github: "#",
+        role: "Back-End",
+        github: "https://github.com/SamuelDovgin",
         website: "#",
         picture: "./images/sam-profile.jpg"
       }
@@ -42,14 +40,24 @@ class AboutPage extends React.Component {
   render() {
     return (
       <div>
-        <header className="custom-jumbotron bg-dark">
-          <h1>Meet the Developers!</h1>
+        <header
+          className="custom-jumbotron bg-sunkist text-white text-center align-items-center mb-3"
+          style={{ "margin-top": "6em", "height": "300px" }}
+        >
+          <h1 className="mt-3 mb-4">Meet the Developers!</h1>
+          <a
+            className="btn btn-social btn-github text-white"
+            href="https://github.com/MaxProfit/IlliniFoodies-Frontend"
+            target="_blank"
+          >
+            <span className="fa fa-github"></span> View this project on GitHub!
+          </a>
         </header>
 
-        <div className="row flex-wrap justify-content-center">
+        <div className="d-flex flex-wrap justify-content-center align-items-center h-100">
           <DeveloperCard dev={this.developers["Roshini"]}></DeveloperCard>
-          <DeveloperCard dev={this.developers["Eunice"]}></DeveloperCard>
           <DeveloperCard dev={this.developers["Matthew"]}></DeveloperCard>
+          <DeveloperCard dev={this.developers["Eunice"]}></DeveloperCard>
           <DeveloperCard dev={this.developers["Sam"]}></DeveloperCard>
         </div>
       </div>
@@ -60,34 +68,33 @@ class AboutPage extends React.Component {
 class DeveloperCard extends React.Component {
   render() {
     return (
-      <div className="col-11 col-md-6 developer-card media">
-        <img
+      <Card style={{ width: "350px" }} className="ml-2 bg-dark text-white">
+        <Card.Header className="text-center">
+          <h4>{this.props.dev.name}</h4>
+          <i>{this.props.dev.role}</i>
+        </Card.Header>
+        <Card.Img
+          className="dev-card-img"
+          style={{ height: "300px" }}
           src={require("" + this.props.dev.picture)}
-          className="img-fluid thumbnail mr-3"
-        ></img>
-        <div className="media-body">
-          <h3>
-            {this.props.dev.name}
-            <a
-              className="btn btn-github btn-social-icon m-1"
-              href={this.props.dev.github}
-            >
-              <span className="fa fa-github fa-lg fa-inverse"></span>
-            </a>
-            <a
-              className="btn btn-twitter btn-social-icon m-1"
-              href={this.props.dev.website}
-            >
-              <span className="fa fa-globe fa-lg fa-inverse"></span>
-            </a>
-          </h3>
-          <div>
-            <i>{this.props.dev.role}</i>
-            <p>{"Tools: " + this.props.dev.tools}</p>
-            <p>{this.props.dev.description}</p>
-          </div>
+        />
+        <div className="card-img-overlay d-flex justify-content-center align-items-center">
+          <a
+            className="btn btn-github btn-social-icon m-1"
+            href={this.props.dev.github}
+            target="_blank"
+          >
+            <span className="fa fa-github fa-lg fa-inverse"></span>
+          </a>
+          <a
+            className="btn btn-twitter btn-social-icon m-1"
+            href={this.props.dev.website}
+            target="_blank"
+          >
+            <span className="fa fa-globe fa-lg fa-inverse"></span>
+          </a>
         </div>
-      </div>
+      </Card>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { InfoCard } from "./CardComponent";
+import { InfoCard } from "./InfoCard";
 import Rating from "./Rating";
 import "./App.css";
 
@@ -9,6 +9,7 @@ class InfoBar extends React.Component {
   render() {
     var cards = [];
     for (let index in topPicks) {
+      console.log(topPicks);
       var restaurant = topPicks[index];
       cards.push(
         <InfoCard
@@ -22,16 +23,12 @@ class InfoBar extends React.Component {
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <h1 className="text-left m-3">{this.props.title}</h1>
-          <div className="row flex-wrap justify-content-around m-1">
-            {cards}
-          </div>
-        </div>
+      <div className="d-flex flex-column text-center align-items-center p-2 m-2">
+        <h3 className="rounded w-50 mt-2 text-dark">{this.props.title}</h3>
+        <div className="row flex-wrap justify-content-around m-4">{cards}</div>
       </div>
     );
   }
-};
+}
 
 export default InfoBar;

@@ -1,14 +1,14 @@
 import React from "react";
-import InfoBar from "./BarComponent";
+import InfoBar from "./InfoBar";
 
 class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <header className="custom-jumbotron foodie-header m-0">
+        <header className="custom-jumbotron bg-sunkist foodie-header m-0">
           <h1 className="header-catch">hungry?</h1>
-          <form className="form-inline justify-content-center align-items-end">
-            <div className="input-group">
+          <form className="form-inline w-100 justify-content-center align-items-end">
+            <div className="input-group w-75">
               <input
                 type="text"
                 className="form-control"
@@ -23,7 +23,7 @@ class HomePage extends React.Component {
           </form>
         </header>
 
-        <InfoBar title="Top Picks"></InfoBar>
+        <InfoBar title="TOP PICKS NEAR YOU"></InfoBar>
       </div>
     );
   }
