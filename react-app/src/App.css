@@ -3,6 +3,7 @@
 }
 
 .foodie-header {
+  background-image: url("./images/foodie-header.jpg");
   width: 100%;
   height: 600px;
 
@@ -51,6 +52,21 @@
 
 .bg-sunkist {
   background-image: linear-gradient(to top,#f2994a,#f2c94c);
+}
+
+.navbar-sunkist {
+  background-image: linear-gradient(to left,#f2994a,#f2c94c);
+}
+
+.btn-sunkist:hover {
+  background-color: #f2994a;
+}
+
+.btn-sunkist {
+  background-color: #f2c94c;
+  transition-property: background-color;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.1s;
 }
 
 .navbar-border {

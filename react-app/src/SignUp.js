@@ -78,6 +78,7 @@ class SignUp extends React.Component {
 
   // put the new user's data to the database
   submitUserSetup() {
+    this.nextForm();
     var data = {
       nickname: this.state.nickname,
       priceMin: this.state.priceMin,
@@ -88,10 +89,11 @@ class SignUp extends React.Component {
       type: "put",
       url: "https://api.illinifoodies.xyz/user/" + this.state.userid,
       data: data,
-      onSuccess: response => this.props.signIn(data)
+      onSuccess: response => {
+        this.props.signIn(data);
+        window.location = "/home";
+      }
     });
-
-    this.nextForm();
   }
 
   // move to the next form in the form slideshow
@@ -112,6 +114,7 @@ class SignUp extends React.Component {
           question="What should we call you?"
           tip="Your friends will see this name when you interact on our social pages"
           inputOnChange={this.handleNicknameChange}
+          inputOnEnter={this.nextForm}
         ></CustomForm>
       );
     } else if (this.state.currentForm === 1) {
@@ -121,6 +124,7 @@ class SignUp extends React.Component {
           tip="Enter direct url to the image (.jpg, .png, etc.)"
           inputOnChange={this.handlePictureChange}
           inputPlaceholder="Enter direct url to the image (.jpg, .png, etc)"
+          inputOnEnter={this.nextForm}
         ></CustomForm>
       );
     } else if (this.state.currentForm === 2) {
@@ -128,48 +132,46 @@ class SignUp extends React.Component {
         value: tick,
         label: "$" + tick.toString()
       }));
-      form = <CustomForm question="How much are you willing to spend on food?"
-        tip="Read: Rate yourself on a scale from broke to not broke"
-        customInput={
-          <div>
-            <Slider
-            className="mt-5"
-            onChange={this.handlePriceRangeChange}
-            defaultValue={this.defaultPriceRange}
-            aria-labelledby="range-slider"
-            valueLabelDisplay="auto"
-            step={5}
-            marks={marks}
-            min={5}
-            max={30}
-          />
-          <button
-            className="btn btn-dark mt-4 w-25"
-            type="button"
-            onClick={this.submitUserSetup}
-          >
-            Done
-          </button>
-          </div>
-        }></CustomForm>
+      form = (
+        <CustomForm
+          question="How much are you willing to spend on food?"
+          tip="Read: Rate yourself on a scale from broke to not broke"
+          customInput={
+            <div>
+              <Slider
+                className="mt-5"
+                onChange={this.handlePriceRangeChange}
+                defaultValue={this.defaultPriceRange}
+                aria-labelledby="range-slider"
+                valueLabelDisplay="auto"
+                step={5}
+                marks={marks}
+                min={5}
+                max={30}
+              />
+              <button
+                className="btn btn-dark mt-4 w-25"
+                type="button"
+                onClick={this.submitUserSetup}
+              >
+                Done
+              </button>
+            </div>
+          }
+        ></CustomForm>
+      );
     } else if (this.state.currentForm === 3) {
-      form=<CustomForm question={"Okay, you're all set up " + this.state.nickname}
-      tip="We're redirecting you to our home page..."></CustomForm>
+      form = (
+        <CustomForm
+          question={"Okay, you're all set up " + this.state.nickname}
+          tip="We're redirecting you to our home page..."
+        ></CustomForm>
+      );
     }
 
     return (
       <div className="bg-dark" style={{ height: "900px" }}>
-        <div className="container mt-5 pt-5">
-          <div
-            className="d-flex justify-content-center align-items-center text-white rounded"
-            style={{
-              backgroundImage: "linear-gradient(to top left, #00b4db, #0083b0)",
-              height: "600px"
-            }}
-          >
-            {form}
-          </div>
-        </div>
+        <div className="container mt-5 pt-5">{form}</div>
       </div>
     );
   }
@@ -180,22 +182,28 @@ class CustomForm extends React.Component {
     if (this.props.inputOnChange != undefined) {
       var interactiveInput = (
         <input
-          className="form-control mt-5 pt-2 w-100"
+          className="form-control mt-5 pt-2 w-75"
           onChange={this.props.inputOnChange}
           onKeyPress={event => {
             if (event.key === "Enter") {
-              this.nextForm();
+              this.props.inputOnEnter();
             }
           }}
           placeholder={this.props.inputPlaceholder}
         />
       );
     } else {
-      interactiveInput = this.props.customInput;
+      interactiveInput = <div className="w-75">{this.props.customInput}</div>;
     }
 
     return (
-      <form className="rounded d-flex flex-column align-items-center">
+      <form
+        className="d-flex flex-column justify-content-center align-items-center text-white rounded"
+        style={{
+          backgroundImage: "linear-gradient(to top left, #00b4db, #0083b0)",
+          height: "600px"
+        }}
+      >
         <h1>{this.props.question}</h1>
         <p>
           <i>{this.props.tip}</i>
