@@ -68,7 +68,7 @@ class AboutPage extends React.Component {
 class DeveloperCard extends React.Component {
   render() {
     return (
-      <Card style={{ width: "350px" }} className="ml-2 bg-dark text-white">
+      <Card style={{ width: "350px" }} className="ml-2 mb-2 bg-dark text-white">
         <Card.Header className="text-center">
           <h4>{this.props.dev.name}</h4>
           <i>{this.props.dev.role}</i>

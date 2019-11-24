@@ -5,7 +5,7 @@ class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <header className="custom-jumbotron bg-sunkist foodie-header m-0">
+        <header className="custom-jumbotron foodie-header m-0">
           <h1 className="header-catch">hungry?</h1>
           <form className="form-inline w-100 justify-content-center align-items-end">
             <div className="input-group w-75">

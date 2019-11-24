@@ -73,7 +73,7 @@ class App extends React.Component {
             style={{
               backgroundImage: "linear-gradient(to top right, #00b4db, #0083b0)"
             }}
-          >
+            >
             Log In
           </a>
         </li>
@@ -85,10 +85,10 @@ class App extends React.Component {
       return (
         <li key="user" className="nav-item nav-link">
           <Dropdown>
-            <Dropdown.Toggle variant="light">
+            <Dropdown.Toggle variant="dark">
               <img
                 className="navbar-image rounded-circle thumbnail mr-1"
-                src={require("./images/missing2.png")}
+                src={this.state.user.picture}
               ></img>
             </Dropdown.Toggle>
 
@@ -137,7 +137,7 @@ class App extends React.Component {
         <Link
           key={name + "-link"}
           to={"/" + name}
-          className="nav-item nav-link mt-2"
+          className="nav-item nav-link text-white mt-2"
         >
           {name}
         </Link>
@@ -166,9 +166,9 @@ class App extends React.Component {
         <Router>
           <div className="fixed-top">
             <Navbar
-              bg="light"
+              bg="dark"
               expand="sm"
-              className="bg-light navbar-sunkist fixed-top pt-3"
+              className="bg-dark fixed-top pt-3"
             >
               <Navbar.Brand className="mr-auto">
                 <Link to="/" className="btn-link">
@@ -177,7 +177,7 @@ class App extends React.Component {
                       className="navbar-image mr-3 ml-2 mt-1"
                       src={require("./images/logo.png")}
                     ></img>
-                    <h2 className="text-dark">Illini Foodies</h2>
+                    <h2 className="text-white">Illini Foodies</h2>
                   </div>
                 </Link>
               </Navbar.Brand>
@@ -190,7 +190,7 @@ class App extends React.Component {
                 </Nav>
               </Navbar.Collapse>
             </Navbar>
-            <div className="bg-sunkist mt-5 pt-5 w-100 navbar-border"></div>
+            <div className="navbar-sunkist mt-5 pt-5" style={{"height": "5px"}}></div>
           </div>
 
           <Route exact path="/" component={HomePage} />
