@@ -6,8 +6,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: "home"
+    }
+    // this.iconChange = this.iconChange.bind(this);
+  }
 
-  
+  iconChange(iconName) {
+    // console.log(iconName);
+    this.setState({
+      active: iconName
+    })
+  }
+
   render() {
     return (
       <div>
@@ -27,16 +40,16 @@ class HomePage extends React.Component {
           </div>
 
           <div className="icon-menu">
-            <div className="icon-item home-icon active">
+            <div className={"icon-item home-icon" + (this.state.active === "home" ? " active" : "")} onClick={this.iconChange.bind(this,"home")}>
               <FontAwesomeIcon icon={faHome} id="home-icon" />
             </div>
-            <div className="icon-item like-icon">
+            <div className={"icon-item like-icon" + (this.state.active === "like" ? " active" : "")} onClick={this.iconChange.bind(this,"like")}>
               <FontAwesomeIcon icon={faHeart} id="heart-icon" />
             </div>
-            <div className="icon-item follow-icon">
+            <div className={"icon-item follow-icon" + (this.state.active === "follow" ? " active" : "")} onClick={this.iconChange.bind(this,"follow")}>
               <FontAwesomeIcon icon={faUsers} id="follow-icon" />
             </div>
-            <div className="icon-item search-icon">
+            <div className={"icon-item search-icon" + (this.state.active === "search" ? " active" : "")} onClick={this.iconChange.bind(this,"search")}>
               <FontAwesomeIcon icon={faSearch} id="search-icon" />
             </div>
           </div>
