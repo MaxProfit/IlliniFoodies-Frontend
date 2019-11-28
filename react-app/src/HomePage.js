@@ -1,11 +1,13 @@
 import React from "react";
 import InfoBar from "./InfoBar";
-import './HomePage.css';
+import './HomePage.scss';
 import Typist from 'react-typist';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 class HomePage extends React.Component {
+
+  
   render() {
     return (
       <div>
@@ -22,7 +24,21 @@ class HomePage extends React.Component {
   
             </Typist>
 
-            <FontAwesomeIcon icon={faHome} />
+          </div>
+
+          <div className="icon-menu">
+            <div className="icon-item home-icon active">
+              <FontAwesomeIcon icon={faHome} id="home-icon" />
+            </div>
+            <div className="icon-item like-icon">
+              <FontAwesomeIcon icon={faHeart} id="heart-icon" />
+            </div>
+            <div className="icon-item follow-icon">
+              <FontAwesomeIcon icon={faUsers} id="follow-icon" />
+            </div>
+            <div className="icon-item search-icon">
+              <FontAwesomeIcon icon={faSearch} id="search-icon" />
+            </div>
           </div>
           
           

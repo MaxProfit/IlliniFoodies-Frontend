@@ -1,0 +1,131 @@
+$homeIcon: #80D8FF;
+$searchIcon: #FF9E80;
+$followIcon: #B9F6CA;
+$likeIcon: #FF80AB;
+
+.intro-header {
+    background-image: url("./images/foodie-header.jpg");
+    width: 100%;
+    height: 600px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    background-attachment: fixed;
+    position: relative;
+}
+
+.overlay {
+    /* z-index: 0; */
+    width: 100%;
+    height: 600px;
+    position: absolute;
+    /* background-color: rgba(0,0,0,0.2); */
+    background: linear-gradient(135deg, #FFA500 0%, #111111 74%);
+    opacity: 0.6;
+}
+
+.intro-catch {
+    z-index: 1;
+    color: white;
+    font-size: 9em;
+    margin-bottom: 0.5em;
+}
+
+.welcome-message {
+    z-index: 1;
+    width: 500px;
+    position: absolute;
+    margin-top: 250px;
+}
+
+.typing-text {
+    color: white;
+    z-index: 1;
+    font-size: 2em;
+    
+}
+
+.typing-cursor {
+    background-color: white;
+}
+
+.icon-menu {
+    position: absolute;
+    bottom: 25px;
+    color: white;
+    font-size: 27px;
+}
+
+.icon-item {
+    border: 3px solid white;
+    display: inline-block;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    box-sizing: border-box;
+    margin-left: 7px;
+    margin-right: 7px;
+    color: white;
+    opacity: 0.8;
+}
+
+.icon-item:hover {
+    cursor: pointer;
+    box-shadow: 0 .10rem 0.50rem white;
+}
+
+#heart-icon, #follow-icon {
+    transform: translateY(4px);
+}
+
+#home-icon, #search-icon {
+    transform: translateY(3px);
+}
+
+.home-icon.active {
+    color: $homeIcon;
+    border: 3px solid $homeIcon;
+    opacity: 0.9;
+}
+
+.home-icon.active:hover {
+    box-shadow: 0 .10rem 0.50rem $homeIcon;
+
+}
+
+.follow-icon.active {
+    color: $followIcon;
+    border: 3px solid $followIcon;
+    opacity: 0.9;
+}
+
+.follow-icon.active:hover {
+    box-shadow: 0 .10rem 0.50rem $followIcon;
+
+}
+
+.like-icon.active {
+    color: $likeIcon;
+    border: 3px solid $likeIcon;
+    opacity: 0.9;
+}
+
+.like-icon.active:hover {
+    box-shadow: 0 .10rem 0.50rem $likeIcon;
+
+}
+
+.search-icon.active {
+    color: $searchIcon;
+    border: 3px solid $searchIcon;
+    opacity: 0.9;
+}
+
+.search-icon.active:hover {
+    box-shadow: 0 .10rem 0.50rem $searchIcon;
+
+}
