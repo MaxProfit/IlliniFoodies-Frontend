@@ -2,6 +2,8 @@ import React from "react";
 import InfoBar from "./InfoBar";
 import './HomePage.css';
 import Typist from 'react-typist';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 class HomePage extends React.Component {
   render() {
@@ -11,15 +13,17 @@ class HomePage extends React.Component {
           <div className="overlay"></div>
           <div className="welcome-message">
             <Typist className="typing-text">
+              <Typist.Delay ms={400} />
               <span>Welcome, Eunice</span>
-              <Typist.Delay ms={500} />
+              <Typist.Delay ms={600} />
               <br></br>
               <span>what's up</span>
+              <Typist.Backspace count={9} delay={1000} />
+  
             </Typist>
-            
-          </div>
-          
 
+            <FontAwesomeIcon icon={faHome} />
+          </div>
           
           
           
