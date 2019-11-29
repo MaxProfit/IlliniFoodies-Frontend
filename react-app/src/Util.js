@@ -13,9 +13,9 @@ export function axiosRequest(request) {
   axios[request.type](request.url, request.data)
     .then(function(response) {
       if (response.status === 200) {
-        console.log("SUCCESS: " + request.type + " to " + request.url);
-        console.log("Printing response...");
-        console.log(response);
+        // console.log("SUCCESS: " + request.type + " to " + request.url);
+        // console.log("Printing response...");
+        // console.log(response);
 
         if (request.onSuccess != undefined) {
           request.onSuccess(response);
@@ -23,12 +23,12 @@ export function axiosRequest(request) {
       }
     })
     .catch(function(error) {
-      console.log("FAIL: " + request.type + " to " + request.url);
-      console.log("Printing error...");
-      console.log(error);
+      // console.log("FAIL: " + request.type + " to " + request.url);
+      // console.log("Printing error...");
+      // console.log(error);
 
-      if (request.onFail !== undefined) {
-        request.onFail(error);
+      if (request.onError !== undefined) {
+        request.onError(error);
       }
     });
 }

@@ -80,10 +80,11 @@ class SignUp extends React.Component {
   submitUserSetup() {
     this.nextForm();
     var data = {
-      nickname: this.state.nickname,
-      priceMin: this.state.priceMin,
-      priceMax: this.state.priceMax,
-      picture: this.state.picture
+      Nickname: this.state.nickname,
+      PriceMin: this.state.priceMin,
+      PriceMax: this.state.priceMax,
+      Picture: this.state.picture,
+      Following: []
     };
     axiosRequest({
       type: "put",
