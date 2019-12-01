@@ -51,7 +51,7 @@ class SignUp extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.data.Item !== undefined) {
-          window.location.href = "/home";
+          this.props.signIn(decodedToken.payload["cognito:username"]);
         }
       }
     });
@@ -91,14 +91,17 @@ class SignUp extends React.Component {
       url: "https://api.illinifoodies.xyz/user/" + this.state.userid,
       data: data,
       onSuccess: response => {
-        this.props.signIn(data);
-        window.location = "/home";
+        this.props.signIn(this.state.userid);
       }
     });
   }
 
   // move to the next form in the form slideshow
   nextForm() {
+    if((this.state.currentForm === 0 && this.state.nickname === null) 
+      || (this.state.currentForm === 1 && this.state.picture === null)) {
+      return;
+    }
     this.setState({ currentForm: this.state.currentForm + 1 });
   }
 
@@ -112,6 +115,7 @@ class SignUp extends React.Component {
     if (this.state.currentForm === 0) {
       var form = (
         <CustomForm
+          key={"get-nickname"}
           question="What should we call you?"
           tip="Your friends will see this name when you interact on our social pages"
           inputOnChange={this.handleNicknameChange}
@@ -121,6 +125,7 @@ class SignUp extends React.Component {
     } else if (this.state.currentForm === 1) {
       form = (
         <CustomForm
+          key={"get-profile-picture"}
           question="Upload a profile picture?"
           tip="Enter direct url to the image (.jpg, .png, etc.)"
           inputOnChange={this.handlePictureChange}
@@ -152,7 +157,7 @@ class SignUp extends React.Component {
               />
               <button
                 className="btn btn-dark mt-4 w-25"
-                type="button"
+                type="submit"
                 onClick={this.submitUserSetup}
               >
                 Done
@@ -180,7 +185,7 @@ class SignUp extends React.Component {
 
 class CustomForm extends React.Component {
   render() {
-    if (this.props.inputOnChange != undefined) {
+    if (this.props.inputOnChange !== undefined) {
       var interactiveInput = (
         <input
           className="form-control mt-5 pt-2 w-75"
@@ -191,6 +196,7 @@ class CustomForm extends React.Component {
             }
           }}
           placeholder={this.props.inputPlaceholder}
+          key={this.props.key}
         />
       );
     } else {

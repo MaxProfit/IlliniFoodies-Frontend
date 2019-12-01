@@ -50,6 +50,10 @@
   color: white;
 }
 
+.text-help {
+  color: #99A3A4;
+}
+
 .bg-sunkist {
   background-image: linear-gradient(to top,#f2994a,#f2c94c);
 }
