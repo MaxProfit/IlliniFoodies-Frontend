@@ -9,7 +9,6 @@ class InfoBar extends React.Component {
   render() {
     var cards = [];
     for (let index in topPicks) {
-      console.log(topPicks);
       var restaurant = topPicks[index];
       cards.push(
         <InfoCard
