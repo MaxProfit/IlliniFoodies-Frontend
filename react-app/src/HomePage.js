@@ -5,11 +5,29 @@ import Typist from 'react-typist';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons'
 
+class FeedPae extends React.Component {
+  render() {
+    return (
+      <div className="feed-page">
+        <div className="d-flex head-wrapper">
+          <h3 className="rounded text-dark mx-auto">Your Feed</h3>
+        </div>
+        
+        <div className="favorite-section">
+
+        </div>
+      </div>
+    )
+  }
+}
+
+
+
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "home"
+      active: "follow"
     }
     // this.iconChange = this.iconChange.bind(this);
   }
@@ -27,7 +45,7 @@ class HomePage extends React.Component {
         <header className="intro-header">
           <div className="overlay"></div>
           <div className="welcome-message">
-            <Typist className="typing-text">
+            {/* <Typist className="typing-text">
               <Typist.Delay ms={400} />
               <span>Welcome, Eunice</span>
               <Typist.Delay ms={600} />
@@ -35,7 +53,7 @@ class HomePage extends React.Component {
               <span>what's up</span>
               <Typist.Backspace count={9} delay={1000} />
   
-            </Typist>
+            </Typist> */}
 
           </div>
 
@@ -73,7 +91,35 @@ class HomePage extends React.Component {
           </form> */}
         </header>
 
-        <InfoBar title="TOP PICKS NEAR YOU"></InfoBar>
+        <div className="content-wrapper">
+          { this.state.active === "home" && 
+
+            <div>
+              
+              <InfoBar title="TOP PICKS NEAR YOU"></InfoBar>
+            </div>
+          }
+
+          { this.state.active === "like" && 
+            <div>
+
+            </div>
+          }
+
+          { this.state.active === "follow" && 
+            <div>
+              <FeedPae />              
+            </div>
+          }
+
+          { this.state.active === "search" && 
+            <div>
+            
+            </div>
+          }
+        </div>
+
+
       </div>
     );
   }
