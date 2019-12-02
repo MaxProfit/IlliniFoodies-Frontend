@@ -9,8 +9,8 @@
     background: rgba(255, 255, 255, 0.644);
     filter: none;
     
-    margin-right: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
 }
 
 .restaurant-card img {
@@ -19,4 +19,8 @@
 
     border-top-left-radius: 1.21rem;
     border-top-right-radius: 1.21rem;
+}
+
+.heart-btn:focus {
+    outline: none;
 }

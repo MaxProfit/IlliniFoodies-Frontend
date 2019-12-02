@@ -90,7 +90,7 @@ class HomePage extends React.Component {
           </form> */}
         </header>
 
-        <div className="content-wrapper bg-home">
+        <div className="content-wrapper">
           { this.state.active === "home" && 
 
             <div>

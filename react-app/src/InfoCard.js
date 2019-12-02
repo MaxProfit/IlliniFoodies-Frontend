@@ -20,7 +20,7 @@ export const InfoCard = class InfoCard extends React.Component {
 
   render() {
       return (
-        <div className="restaurant-card">
+        <div className="restaurant-card shadow">
           <img src={this.props.imageSrc}></img>
           <div className="card-body">
             <a href={this.props.titleLink} target="_blank" className="card-link" >
@@ -37,7 +37,7 @@ export const InfoCard = class InfoCard extends React.Component {
           </div>
           { this.props.like === true && 
             <div onClick={ this.unlikeRestaurant.bind(this, this.props.restaurantId) }>
-              <IconButton aria-label="add to favorites" className="align-self-end float-right" color="red">
+              <IconButton aria-label="add to favorites" className="align-self-end float-right heart-btn" color="red">
                 <FavoriteIcon />
               </IconButton>
             </div>
@@ -45,7 +45,7 @@ export const InfoCard = class InfoCard extends React.Component {
           }
           { this.props.like === false && 
             <div onClick={ this.likeRestaurant.bind(this, this.props.restaurantId) }>
-              <IconButton aria-label="add to favorites" className="align-self-end float-right">
+              <IconButton aria-label="add to favorites" className="align-self-end float-right heart-btn">
                 <FavoriteIcon />
               </IconButton>
             </div>
