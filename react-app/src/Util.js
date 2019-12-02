@@ -13,22 +13,14 @@ export function axiosRequest(request) {
   axios[request.type](request.url, request.data)
     .then(function(response) {
       if (response.status === 200) {
-        console.log("SUCCESS: " + request.type + " to " + request.url);
-        console.log("Printing response...");
-        console.log(response);
-
-        if (request.onSuccess != undefined) {
+        if (request.onSuccess !== undefined) {
           request.onSuccess(response);
         }
       }
     })
     .catch(function(error) {
-      console.log("FAIL: " + request.type + " to " + request.url);
-      console.log("Printing error...");
-      console.log(error);
-
-      if (request.onFail !== undefined) {
-        request.onFail(error);
+      if (request.onError !== undefined) {
+        request.onError(error);
       }
     });
 }
@@ -48,10 +40,10 @@ export function getCookie(cname) {
   var ca = decodedCookie.split(';');
   for(var i = 0; i <ca.length; i++) {
     var c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }

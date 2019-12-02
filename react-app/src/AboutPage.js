@@ -49,6 +49,7 @@ class AboutPage extends React.Component {
             className="btn btn-social btn-github text-white"
             href="https://github.com/MaxProfit/IlliniFoodies-Frontend"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <span className="fa fa-github"></span> View this project on GitHub!
           </a>
@@ -83,6 +84,7 @@ class DeveloperCard extends React.Component {
             className="btn btn-github btn-social-icon m-1"
             href={this.props.dev.github}
             target="_blank"
+            rel="noopener noreferrer"
           >
             <span className="fa fa-github fa-lg fa-inverse"></span>
           </a>
@@ -90,6 +92,7 @@ class DeveloperCard extends React.Component {
             className="btn btn-twitter btn-social-icon m-1"
             href={this.props.dev.website}
             target="_blank"
+            rel="noopener noreferrer"
           >
             <span className="fa fa-globe fa-lg fa-inverse"></span>
           </a>
