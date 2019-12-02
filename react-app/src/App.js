@@ -31,7 +31,8 @@ class App extends React.Component {
       showSettingsModal: false,
       userSearch: "", // relevant to user search in the friends modal
       userSearchResults: [],
-      showFollows: true // relevant to whether we should show follows or search results in the friends modal
+      showFollows: true, // relevant to whether we should show follows or search results in the friends modal
+      favRestaurants: []
     };
 
     this.signIn = this.signIn.bind(this);
@@ -47,6 +48,23 @@ class App extends React.Component {
     this.refreshFollowing = this.refreshFollowing.bind(this);
     this.searchUsers = this.searchUsers.bind(this);
     this.follow = this.follow.bind(this);
+    this.getFavRestaurant = this.getFavRestaurant.bind(this);
+  }
+
+  getFavRestaurant(userId) {
+    console.log("get fav");
+    console.log("fav: " + userId);
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/user/" + userId+"/favorites",
+      data: {},
+      onSuccess: response => {
+        if (response.data !== undefined) {
+          console.log(response.data);
+          this.setState({favRestaurants : response.data });
+        }
+      }
+    });
   }
 
   signIn(userId) {
@@ -224,6 +242,7 @@ class App extends React.Component {
           if (response.data.Item !== undefined) {
             this.setState({ user: response.data.Item });
             this.refreshFollowing();
+            this.getFavRestaurant(userid);
           }
         }
       });
@@ -376,13 +395,13 @@ class App extends React.Component {
               </Navbar.Collapse>
             </Navbar>
             <div
-              className="navbar-sunkist mt-5 pt-5"
+              className="navbar-sunkist mt-5 pt-5 navbar-yellow"
               style={{ height: "5px" }}
             ></div>
           </div>
 
-          <Route exact path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
+          <Route exact path="/" component={HomePage} favRestaurants={this.state.favRestaurants} />
+          <Route path="/home" component={HomePage} favRestaurants={this.state.favRestaurants} />
           <Route path="/about" component={AboutPage} />
           <Route path="/demo" component={DemoPage} />
           <Route

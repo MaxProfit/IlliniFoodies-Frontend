@@ -103,3 +103,7 @@
 form input{
   margin-bottom: 0.5em;
 }
+
+.navbar-yellow {
+  opacity: 0.6;
+}
