@@ -21,12 +21,15 @@ class InfoBar extends React.Component {
             title={restaurant.name}
             titleLink={restaurant.url}
             text={<Rating rating={restaurant.rating}></Rating>}
+            like={false}
+            restaurantId={restaurant.RestaurantId}
           ></InfoCard>
+           
         );
       }
     } else if (this.props.page === "like page") {
       this.props.favRestaurants.forEach(((restaurant, index) => {
-        console.log(restaurant);
+        // console.log(restaurant.RestaurantId);
         cards.push(
           <InfoCard
             key={index}
@@ -34,6 +37,8 @@ class InfoBar extends React.Component {
             title={restaurant.RestaurantName}
             titleLink={restaurant.WebsiteURL}
             text={<Rating rating={restaurant.AvgRating}></Rating>}
+            like={true}
+            restaurantId={restaurant.RestaurantId}
           ></InfoCard>
         );
       }));
@@ -44,7 +49,7 @@ class InfoBar extends React.Component {
     return (
       <div className="d-flex flex-column text-center align-items-center p-2 m-2">
         <h3 className="rounded w-50 mt-3 text-dark">{this.props.title}</h3>
-        <div className="row flex-wrap justify-content-around m-4">{cards}</div>
+        <div className="d-flex flex-row flex-wrap justify-content-start m-4">{cards}</div>
       </div>
     );
   }

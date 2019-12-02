@@ -8,10 +8,15 @@ export const InfoCard = class InfoCard extends React.Component {
   constructor(props) {
     super(props);
     this.likeRestaurant = this.likeRestaurant.bind(this);
+    // console.log(props);
   }
 
-  likeRestaurant(event) {
-    console.log(event);
+  likeRestaurant(restaurantId) {
+    console.log(restaurantId);
+  }
+
+  unlikeRestaurant(restaurantId) {
+    console.log(restaurantId);
   }
 
   render() {
@@ -24,11 +29,22 @@ export const InfoCard = class InfoCard extends React.Component {
             </a>
             <div className="card-text">{this.props.text}</div>
           </div>
-          <div onClick={ this.likeRestaurant }>
-            <IconButton aria-label="add to favorites" className="float-right inline">
-              <FavoriteIcon />
-            </IconButton>
-          </div>
+          { this.props.like === true && 
+            <div onClick={ this.unlikeRestaurant.bind(this, this.props.restaurantId) }>
+              <IconButton aria-label="add to favorites" className="float-right inline" color="secondary">
+                <FavoriteIcon />
+              </IconButton>
+            </div>
+            
+          }
+          { this.props.like === false && 
+            <div onClick={ this.likeRestaurant.bind(this, this.props.restaurantId) }>
+              <IconButton aria-label="add to favorites" className="float-right inline">
+                <FavoriteIcon />
+              </IconButton>
+            </div>
+            
+          }
           
         </div>
 
