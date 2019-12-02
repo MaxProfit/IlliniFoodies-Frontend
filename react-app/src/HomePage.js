@@ -28,6 +28,7 @@ class HomePage extends React.Component {
       active: "home"
     }
     // this.iconChange = this.iconChange.bind(this);
+    // console.log(this.props.favRestaurants);
   }
 
   iconChange(iconName) {
@@ -94,13 +95,13 @@ class HomePage extends React.Component {
 
             <div>
               
-              <InfoBar title="TOP PICKS NEAR YOU"></InfoBar>
+              <InfoBar title="TOP PICKS NEAR YOU" page="home page"></InfoBar>
             </div>
           }
 
           { this.state.active === "like" && 
             <div>
-
+              <InfoBar title="Favorite Restaurants" page="like page" favRestaurants={this.props.favRestaurants} />
             </div>
           }
 

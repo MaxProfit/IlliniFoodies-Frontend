@@ -52,15 +52,13 @@ class App extends React.Component {
   }
 
   getFavRestaurant(userId) {
-    console.log("get fav");
-    console.log("fav: " + userId);
     axiosRequest({
       type: "get",
       url: "https://api.illinifoodies.xyz/user/" + userId+"/favorites",
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
-          console.log(response.data);
+          // console.log(response.data);
           this.setState({favRestaurants : response.data });
         }
       }
@@ -400,8 +398,8 @@ class App extends React.Component {
             ></div>
           </div>
 
-          <Route exact path="/" component={HomePage} favRestaurants={this.state.favRestaurants} />
-          <Route path="/home" component={HomePage} favRestaurants={this.state.favRestaurants} />
+          <Route exact path="/" component={() => <HomePage favRestaurants={this.state.favRestaurants} />} />
+          <Route path="/home" component={() => <HomePage favRestaurants={this.state.favRestaurants} />} />
           <Route path="/about" component={AboutPage} />
           <Route path="/demo" component={DemoPage} />
           <Route

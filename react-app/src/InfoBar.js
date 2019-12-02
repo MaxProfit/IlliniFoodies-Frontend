@@ -8,20 +8,38 @@ var topPicks = require("./data/topPicks.json");
 class InfoBar extends React.Component {
   render() {
     var cards = [];
-    for (let index in topPicks) {
-      // console.log(topPicks);
-      var restaurant = topPicks[index];
-      // console.log(restaurant);
-      cards.push(
-        <InfoCard
-          key={index}
-          imageSrc={restaurant.image_url}
-          title={restaurant.name}
-          titleLink={restaurant.url}
-          text={<Rating rating={restaurant.rating}></Rating>}
-        ></InfoCard>
-      );
+
+    if (this.props.page === "home page") {
+      for (let index in topPicks) {
+        // console.log(topPicks);
+        var restaurant = topPicks[index];
+        // console.log(restaurant);
+        cards.push(
+          <InfoCard
+            key={index}
+            imageSrc={restaurant.image_url}
+            title={restaurant.name}
+            titleLink={restaurant.url}
+            text={<Rating rating={restaurant.rating}></Rating>}
+          ></InfoCard>
+        );
+      }
+    } else if (this.props.page === "like page") {
+      this.props.favRestaurants.forEach(((restaurant, index) => {
+        console.log(restaurant);
+        cards.push(
+          <InfoCard
+            key={index}
+            imageSrc={restaurant.PictureURL}
+            title={restaurant.RestaurantName}
+            titleLink={restaurant.WebsiteURL}
+            text={<Rating rating={restaurant.AvgRating}></Rating>}
+          ></InfoCard>
+        );
+      }));
+        
     }
+    
 
     return (
       <div className="d-flex flex-column text-center align-items-center p-2 m-2">
