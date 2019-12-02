@@ -23,6 +23,7 @@ class InfoBar extends React.Component {
             text={<Rating rating={restaurant.rating}></Rating>}
             like={false}
             restaurantId={restaurant.RestaurantId}
+            tags={restaurant.keywords}
           ></InfoCard>
            
         );
@@ -47,9 +48,9 @@ class InfoBar extends React.Component {
     
 
     return (
-      <div className="d-flex flex-column text-center align-items-center p-2 m-2">
-        <h3 className="rounded w-50 mt-3 text-dark">{this.props.title}</h3>
-        <div className="d-flex flex-row flex-wrap justify-content-start m-4">{cards}</div>
+      <div className="container text-center">
+        <h3 className="pt-4 mb-4 text-white">{this.props.title}</h3>
+        <div className="d-flex flex-row flex-wrap align-items-center">{cards}</div>
       </div>
     );
   }

@@ -10,7 +10,7 @@ class FeedPae extends React.Component {
     return (
       <div className="feed-page">
         <div className="d-flex head-wrapper">
-          <h3 className="rounded text-dark mx-auto">Your Feed</h3>
+          <h3 className="rounded text-dark">Your Feed</h3>
         </div>
         
         
@@ -90,7 +90,7 @@ class HomePage extends React.Component {
           </form> */}
         </header>
 
-        <div className="content-wrapper">
+        <div className="content-wrapper bg-home">
           { this.state.active === "home" && 
 
             <div>

@@ -2,6 +2,10 @@
   max-height: 30px;
 }
 
+body {
+  background-color: #11111150;
+}
+
 .foodie-header {
   background-image: url("./images/foodie-header.jpg");
   width: 100%;
@@ -23,6 +27,13 @@
   color: white;
   font-size: 11em;
   margin-bottom: 0.5em;
+}
+
+.bg-home {
+  background-image: url("./images/home-background.jpg");
+  object-fit: cover;
+  background-repeat: repeat;
+  width: 100%;
 }
 
 .card {

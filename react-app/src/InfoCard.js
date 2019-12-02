@@ -8,7 +8,6 @@ export const InfoCard = class InfoCard extends React.Component {
   constructor(props) {
     super(props);
     this.likeRestaurant = this.likeRestaurant.bind(this);
-    // console.log(props);
   }
 
   likeRestaurant(restaurantId) {
@@ -21,17 +20,24 @@ export const InfoCard = class InfoCard extends React.Component {
 
   render() {
       return (
-        <div className="card mb-3 bg-light text-dark restaurant-card">
+        <div className="restaurant-card">
           <img src={this.props.imageSrc}></img>
           <div className="card-body">
             <a href={this.props.titleLink} target="_blank" className="card-link" >
               <h5 className="card-title text-dark">{this.props.title}</h5>
             </a>
-            <div className="card-text">{this.props.text}</div>
+            <div className="card-text">
+              {this.props.text}
+            </div>
+          </div>
+          <div className="mt-auto">
+            {this.props.tags.split(",").map(function(tag) {
+                return <span className="badge badge-light mr-1">{tag}</span>
+              })}
           </div>
           { this.props.like === true && 
             <div onClick={ this.unlikeRestaurant.bind(this, this.props.restaurantId) }>
-              <IconButton aria-label="add to favorites" className="float-right inline" color="secondary">
+              <IconButton aria-label="add to favorites" className="align-self-end float-right" color="red">
                 <FavoriteIcon />
               </IconButton>
             </div>
@@ -39,7 +45,7 @@ export const InfoCard = class InfoCard extends React.Component {
           }
           { this.props.like === false && 
             <div onClick={ this.likeRestaurant.bind(this, this.props.restaurantId) }>
-              <IconButton aria-label="add to favorites" className="float-right inline">
+              <IconButton aria-label="add to favorites" className="align-self-end float-right">
                 <FavoriteIcon />
               </IconButton>
             </div>
