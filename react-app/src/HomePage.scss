@@ -3,6 +3,7 @@ $searchIcon: #FF9E80;
 $followIcon: #B9F6CA;
 $likeIcon: #FF80AB;
 $headerHeight: 600px;
+$imageHeight: 80px;
 
 .intro-header {
     background-image: url("./images/foodie-header.jpg");
@@ -141,8 +142,26 @@ $headerHeight: 600px;
 
 .favorite-section {
     margin-top: 20px;
-    margin-left: 40px;
-    margin-right: 40px;
-    height: 150px;
+    margin-left: 80px;
+    margin-right: 80px;
     box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.075);
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.profile-pic img {
+    width: $imageHeight;
+    height: $imageHeight;
+    border-radius: 50%;
+    border: 3px solid rgba(0,0,0,0.1);
+}
+
+.user-fav {
+    margin-left: 30px;
+    font-size: 25px;
+    line-height: $imageHeight;
+    text-align: center;
+    vertical-align: middle;
 }

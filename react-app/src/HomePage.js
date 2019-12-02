@@ -13,9 +13,7 @@ class FeedPae extends React.Component {
           <h3 className="rounded text-dark mx-auto">Your Feed</h3>
         </div>
         
-        <div className="favorite-section">
-
-        </div>
+        
       </div>
     )
   }
@@ -27,7 +25,7 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "follow"
+      active: "home"
     }
     // this.iconChange = this.iconChange.bind(this);
   }
