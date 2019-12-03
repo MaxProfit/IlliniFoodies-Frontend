@@ -18,7 +18,48 @@ export const InfoCard = class InfoCard extends React.Component {
     this.state = {
       like: this.props.like,
       review: false,
-      rating: 0
+      rating: 0,
+      comment: ""
+    }
+  }
+
+  submitReview() {
+    console.log(this.props.user);
+    if (this.props.user !== null) {
+      console.log("userid", this.props.user.Id);
+      // console.log("restaurant id", this.props.restaurantId);
+      // console.log("rating", this.state.rating);
+
+      var moment = require('moment-timezone');
+      moment().format();
+      
+      
+      var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      
+      var m = moment.utc(d);
+      m.tz('America/Chicago');
+      var s = m.format("YYYY-MM-DD HH:mm:ss");
+
+      // console.log("date time", s);
+      // console.log("comment", this.state.comment);
+
+      axiosRequest({
+        type: "post",
+        url: "https://api.illinifoodies.xyz/ratings",
+        data: {
+          "RestaurantId": this.props.restaurantId,
+          "UserId": this.props.user.Id,
+          "Comment": this.state.comment,
+          "DatePosted": s,
+          "Rating" : this.state.rating
+        },
+        onSuccess: response => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            this.setState({ review: false });
+          }
+        }
+      });
     }
   }
 
@@ -103,6 +144,12 @@ export const InfoCard = class InfoCard extends React.Component {
                   className="review-input"
                   margin="normal"
                   variant="outlined"
+                  onChange={(event) => {
+                    // console.log(event.target.value);
+                    this.setState({
+                      comment: event.target.value
+                    })
+                  }}
                 />
 
 
@@ -114,10 +161,12 @@ export const InfoCard = class InfoCard extends React.Component {
                       </IconButton>
 
                     </div>
+                    
+                    <div onClick={ this.submitReview.bind(this) }>
+                    
                       <IconButton aria-label="done" className="done-btn">
                         <DoneIcon />
                       </IconButton>
-                    <div>
                     
                     </div>                    
                     

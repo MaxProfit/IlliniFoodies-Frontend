@@ -2,8 +2,11 @@ import React from "react";
 import InfoBar from "./InfoBar";
 import './HomePage.scss';
 import Typist from 'react-typist';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Grid from '@material-ui/core/Grid';
 
 class FeedPae extends React.Component {
   render() {
@@ -18,13 +21,42 @@ class FeedPae extends React.Component {
   }
 }
 
+class SearchPage extends React.Component {
+  
+  render() {
+    return (
+      <div className="search-page">
+        <div className="search-form">
+
+          <Autocomplete
+          freeSolo
+          id="free-solo-2-demo"
+          disableClearable
+          // options={top100Films.map(option => option.title)}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label="Search input"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              InputProps={{ ...params.InputProps, type: 'search' }}
+            />
+          )}
+        />
+        </div>
+      </div>
+    );
+  }
+}
+
 
 
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "home"
+      active: "search"
     }
   }
 
@@ -116,7 +148,7 @@ class HomePage extends React.Component {
 
           { this.state.active === "search" && 
             <div>
-            
+              <SearchPage />
             </div>
           }
         </div>
