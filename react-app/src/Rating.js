@@ -9,6 +9,8 @@ class Rating extends React.Component {
       }
       else if(i === this.props.rating - 0.5){
         checked.push(<span key={i} className="fa fa-star-half-o text-warning"></span>);
+      } else {
+        checked.push(<span key={i} className="fa fa-star-o text-warning"></span>);
       }
     }
 

@@ -23,6 +23,7 @@ class InfoBar extends React.Component {
             restaurantId={restaurant.RestaurantId}
             tags={restaurant.Tags}
             user={this.props.user}
+            unique={k}
           ></InfoCard>
         );
       }));
@@ -41,6 +42,7 @@ class InfoBar extends React.Component {
             restaurantId={restaurant.RestaurantId}
             tags={restaurant.Tags}
             user={this.props.user}
+            unique={k}
           ></InfoCard>
         );
       }));
