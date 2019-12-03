@@ -32,7 +32,8 @@ class App extends React.Component {
       userSearch: "", // relevant to user search in the friends modal
       userSearchResults: [],
       showFollows: true, // relevant to whether we should show follows or search results in the friends modal
-      favRestaurants: []
+      favRestaurants: [],
+      recommendList: []
     };
 
     this.signIn = this.signIn.bind(this);
@@ -49,6 +50,7 @@ class App extends React.Component {
     this.searchUsers = this.searchUsers.bind(this);
     this.follow = this.follow.bind(this);
     this.getFavRestaurant = this.getFavRestaurant.bind(this);
+    this.getRecommendation = this.getRecommendation.bind(this);
   }
 
   getFavRestaurant(userId) {
@@ -60,6 +62,20 @@ class App extends React.Component {
         if (response.data !== undefined) {
           // console.log(response.data);
           this.setState({favRestaurants : response.data });
+        }
+      }
+    });
+  }
+
+  getRecommendation(userId) {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/restaurants/recommendations",
+      data: {},
+      onSuccess: response => {
+        if (response.data !== undefined) {
+          console.log(response);
+          this.setState({recommendList : response.data });
         }
       }
     });
@@ -241,6 +257,7 @@ class App extends React.Component {
             this.setState({ user: response.data.Item });
             this.refreshFollowing();
             this.getFavRestaurant(userid);
+            this.getRecommendation(userid);
           }
         }
       });
@@ -398,8 +415,8 @@ class App extends React.Component {
             ></div>
           </div>
 
-          <Route exact path="/" component={() => <HomePage favRestaurants={this.state.favRestaurants} />} />
-          <Route path="/home" component={() => <HomePage favRestaurants={this.state.favRestaurants} />} />
+          <Route exact path="/" component={() => <HomePage favRestaurants={this.state.favRestaurants} user={this.state.user} />} />
+          <Route path="/home" component={() => <HomePage favRestaurants={this.state.favRestaurants} user={this.state.user} />} />
           <Route path="/about" component={AboutPage} />
           <Route path="/demo" component={DemoPage} />
           <Route

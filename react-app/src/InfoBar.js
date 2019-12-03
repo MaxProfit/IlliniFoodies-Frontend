@@ -14,9 +14,10 @@ class InfoBar extends React.Component {
         // console.log(topPicks);
         var restaurant = topPicks[index];
         // console.log(restaurant);
+        var k = "recommend-" + index;
         cards.push(
           <InfoCard
-            key={index}
+            key={k}
             imageSrc={restaurant.image_url}
             title={restaurant.name}
             titleLink={restaurant.url}
@@ -24,22 +25,27 @@ class InfoBar extends React.Component {
             like={false}
             restaurantId={restaurant.RestaurantId}
             tags={restaurant.keywords}
+            user={this.props.user}
           ></InfoCard>
            
         );
       }
     } else if (this.props.page === "like page") {
+      console.log(this.props.favRestaurants);
       this.props.favRestaurants.forEach(((restaurant, index) => {
         // console.log(restaurant.RestaurantId);
+        var k = "like-" + index;
         cards.push(
           <InfoCard
-            key={index}
+            key={k}
             imageSrc={restaurant.PictureURL}
             title={restaurant.RestaurantName}
             titleLink={restaurant.WebsiteURL}
             text={<Rating rating={restaurant.AvgRating}></Rating>}
             like={true}
             restaurantId={restaurant.RestaurantId}
+            tags={restaurant.Tags}
+            user={this.props.user}
           ></InfoCard>
         );
       }));
