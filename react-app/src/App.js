@@ -389,7 +389,7 @@ class App extends React.Component {
           <div className="fixed-top">
             <Navbar bg="dark" expand="sm" className="bg-dark fixed-top pt-3">
               <Navbar.Brand className="mr-auto">
-                <Link to="/" className="btn-link">
+                <Link to="/" className="btn-link homepage-link">
                   <div className="d-flex flex-row">
                     <img
                       className="navbar-image mr-3 ml-2 mt-1"

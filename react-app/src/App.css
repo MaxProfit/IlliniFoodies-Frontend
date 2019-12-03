@@ -28,13 +28,10 @@ body {
   font-size: 11em;
   margin-bottom: 0.5em;
 }
-/* 
-.bg-home {
-  background-image: url("./images/home-background.jpg");
-  object-fit: cover;
-  background-repeat: repeat;
-  width: 100%;
-} */
+
+.homepage-link {
+  text-decoration: none;
+}
 
 .card {
   width: 350px;

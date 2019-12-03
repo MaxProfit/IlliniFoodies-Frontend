@@ -10,7 +10,6 @@ class FeedPae extends React.Component {
     return (
       <div className="feed-page">
         <div className="d-flex head-wrapper">
-          <h3 className="rounded text-dark">Your Feed</h3>
         </div>
         
         
