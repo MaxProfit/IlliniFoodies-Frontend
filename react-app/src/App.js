@@ -74,7 +74,7 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
-          console.log(response);
+          // console.log(response);
           this.setState({recommendList : response.data });
         }
       }
@@ -415,8 +415,14 @@ class App extends React.Component {
             ></div>
           </div>
 
-          <Route exact path="/" component={() => <HomePage favRestaurants={this.state.favRestaurants} user={this.state.user} />} />
-          <Route path="/home" component={() => <HomePage favRestaurants={this.state.favRestaurants} user={this.state.user} />} />
+          <Route exact path="/" component={() => <HomePage 
+                                                    favRestaurants={this.state.favRestaurants} 
+                                                    user={this.state.user} 
+                                                    recommendList={this.state.recommendList} />} />
+          <Route path="/home" component={() => <HomePage 
+                                                    favRestaurants={this.state.favRestaurants} 
+                                                    user={this.state.user} 
+                                                    recommendList={this.state.recommendList} />} />
           <Route path="/about" component={AboutPage} />
           <Route path="/demo" component={DemoPage} />
           <Route

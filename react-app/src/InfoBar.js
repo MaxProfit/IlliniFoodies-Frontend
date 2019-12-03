@@ -10,28 +10,47 @@ class InfoBar extends React.Component {
     var cards = [];
 
     if (this.props.page === "home page") {
-      for (let index in topPicks) {
-        // console.log(topPicks);
-        var restaurant = topPicks[index];
-        // console.log(restaurant);
-        var k = "recommend-" + index;
+      console.log(this.props.recommendList);
+      // for (let index in topPicks) {
+      //   // console.log(topPicks);
+      //   var restaurant = topPicks[index];
+      //   // console.log(restaurant);
+      //   var k = "recommend-" + index;
+      //   cards.push(
+      //     <InfoCard
+      //       key={k}
+      //       imageSrc={restaurant.image_url}
+      //       title={restaurant.name}
+      //       titleLink={restaurant.url}
+      //       text={<Rating rating={restaurant.rating}></Rating>}
+      //       like={false}
+      //       restaurantId={restaurant.RestaurantId}
+      //       tags={restaurant.keywords}
+      //       user={this.props.user}
+      //     ></InfoCard>
+           
+      //   );
+      // }
+      this.props.recommendList.forEach(((restaurant, index) => {
+        // console.log(restaurant.RestaurantId);
+        var k = "like-" + index;
         cards.push(
           <InfoCard
             key={k}
-            imageSrc={restaurant.image_url}
-            title={restaurant.name}
-            titleLink={restaurant.url}
-            text={<Rating rating={restaurant.rating}></Rating>}
+            imageSrc={restaurant.PictureURL}
+            title={restaurant.RestaurantName}
+            titleLink={restaurant.WebsiteURL}
+            text={<Rating rating={restaurant.AvgRating}></Rating>}
             like={false}
             restaurantId={restaurant.RestaurantId}
-            tags={restaurant.keywords}
+            tags={restaurant.Tags}
             user={this.props.user}
           ></InfoCard>
-           
         );
-      }
+      }));
+      
     } else if (this.props.page === "like page") {
-      console.log(this.props.favRestaurants);
+      // console.log(this.props.favRestaurants);
       this.props.favRestaurants.forEach(((restaurant, index) => {
         // console.log(restaurant.RestaurantId);
         var k = "like-" + index;

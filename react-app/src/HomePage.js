@@ -93,13 +93,19 @@ class HomePage extends React.Component {
 
             <div>
               
-              <InfoBar title="TOP PICKS NEAR YOU" page="home page" user={this.props.user}></InfoBar>
+              <InfoBar title="TOP PICKS NEAR YOU" 
+                       page="home page" 
+                       recommendList={this.props.recommendList} 
+                       user={this.props.user}></InfoBar>
             </div>
           }
 
           { this.state.active === "like" && 
             <div>
-              <InfoBar title="Favorite Restaurants" page="like page" favRestaurants={this.props.favRestaurants} user={this.props.user} />
+              <InfoBar title="Favorite Restaurants" 
+                       page="like page" 
+                       favRestaurants={this.props.favRestaurants} 
+                       user={this.props.user} />
             </div>
           }
 
