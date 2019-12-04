@@ -180,7 +180,7 @@ export const InfoCard = class InfoCard extends React.Component {
               
           </Fade>
           
-          <div className="card-body">
+          <div className="card-body text-center">
             <a href={this.props.titleLink} target="_blank" className="card-link" >
               <h5 className="card-title text-dark">{this.props.title}</h5>
             </a>
@@ -188,9 +188,9 @@ export const InfoCard = class InfoCard extends React.Component {
               {this.props.text}
             </div>
           </div>
-          <div className="mt-auto">
+          <div className="mt-auto d-flex justify-content-center">
             {this.props.tags.split(",").map(function(tag) {
-                return <span className="badge badge-light mr-1">{tag}</span>
+                return <span className="badge badge-light mr-1" key={tag}>{tag}</span>
               })}
           </div>
 

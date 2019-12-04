@@ -13,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { axiosRequest } from "./Util";
 import SearchIcon from '@material-ui/icons/Search';
 import Fab from '@material-ui/core/Fab';
+import { InfoCard } from "./InfoCard";
+import Rating from "./Rating";
+
 
 class FeedPae extends React.Component {
   render() {
@@ -37,7 +40,10 @@ class SearchPage extends React.Component {
       restaurantName: [],
       tagsList: [],
       nameInput: "",
-      tagInput: []
+      tagInput: [],
+      searchResult: [],
+      similarResult: [],
+      searchComponent: []
     }
 
     
@@ -70,14 +76,18 @@ class SearchPage extends React.Component {
   }
 
   handleSearch() {
-    console.log("min price", this.state.minPrice);
-    console.log("max price", this.state.maxPrice);
-    console.log("min rating", this.state.minRating);
-    console.log("name", this.state.nameInput);
-    console.log("tags", this.state.tagInput);
+    // console.log("min price", this.state.minPrice);
+    // console.log("max price", this.state.maxPrice);
+    // console.log("min rating", this.state.minRating);
+    // console.log("name", this.state.nameInput);
+    // console.log("tags", this.state.tagInput);
+
+    // console.log("search");
+
     var tagInputString = this.state.tagInput.join(",")
 
     const axios = require('axios').default;
+    var self = this;
     axios.get('https://api.illinifoodies.xyz/restaurants/search', {
       params: {
         minprice: this.state.minPrice,
@@ -88,7 +98,78 @@ class SearchPage extends React.Component {
       }
     })
     .then(function (response) {
-      console.log(response);
+      // console.log(response);
+      self.setState({
+        searchResult: response.data
+      })
+
+      var searchResultCarousel = [];
+      var searchResultSlide = [];
+      response.data.forEach((element, index) => {
+        searchResultSlide.push(
+          <InfoCard
+              key={"search-result-"+index}
+              imageSrc={element.PictureURL}
+              title={element.RestaurantName}
+              titleLink={element.WebsiteURL}
+              text={<Rating rating={element.AvgRating}></Rating>}
+              like={false}
+              restaurantId={element.RestaurantId}
+              tags={element.Tags}
+              user={self.props.user}
+              unique={"search-result-"+index}
+            ></InfoCard>
+        );
+        
+        // console.log(searchResultSlide);
+        if ((index + 1) % 3 === 0) {
+          if (index == 2) {
+            searchResultCarousel.push(
+              <div className="carousel-item active" key={"carousel" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { searchResultSlide }
+                </div>
+              </div>
+            )
+          } else {
+            searchResultCarousel.push(
+              <div className="carousel-item" key={"carousel" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { searchResultSlide }
+                </div>
+              </div>
+            )
+          }
+          
+          searchResultSlide = [];
+        }
+
+      })
+
+      if (searchResultSlide.length !== 0) {
+        if (response.data.length < 3) {
+          searchResultCarousel.push(
+            <div className="carousel-item active" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { searchResultSlide }
+              </div>
+            </div>
+          )
+        } else {
+          searchResultCarousel.push(
+            <div className="carousel-item" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { searchResultSlide }
+              </div>
+            </div>
+          )
+        }
+      }
+      self.setState({
+        searchComponent: searchResultCarousel
+      })
     })
     .catch(function (error) {
       console.log(error);
@@ -98,10 +179,20 @@ class SearchPage extends React.Component {
     });  
   }
   
+  // <div class="carousel-item">
+  //               <div className="test2"></div>
+              
+  //             </div>
 
   render() {
+    // console.log("hi:", this.state.searchResult);
+    
+
+    // console.log(searchResultCarousel.length);
+
     return (
       <div className="search-page">
+        
         <div className="search-form">
           
           <div className="container mt-5">
@@ -131,8 +222,7 @@ class SearchPage extends React.Component {
                           })
                           // console.log(event.target.value);
                         }}
-
-                         />
+                     />
                   )}
                   renderOption={(option, { inputValue }) => {
                     const matches = match(option, inputValue);
@@ -141,7 +231,7 @@ class SearchPage extends React.Component {
                     return (
                       <div>
                         {parts.map((part, index) => (
-                          <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                          <span key={"part-"+index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
                             {part.text}
                           </span>
                         ))}
@@ -152,8 +242,6 @@ class SearchPage extends React.Component {
               </div>
 
               <div className="col">
-                
-
                 <Autocomplete
                   multiple
                   id="tags-outlined"
@@ -175,13 +263,11 @@ class SearchPage extends React.Component {
                       variant="outlined"
                       label="Tags"
                       margin="normal"
-                      fullWidth
-                      
+                      fullWidth         
                     />
                   )}
                 />
-              </div>
-              
+              </div>     
             </div>
 
             <div className="row mb-4">
@@ -232,7 +318,7 @@ class SearchPage extends React.Component {
                   />
               </div>
 
-              <div className="col">
+              <div className="col d-flex justify-content-end align-items-center mt-4">
                 <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) }>
                   <SearchIcon className="search-icon" />
                   <span className="search-txt">Search</span>
@@ -242,6 +328,38 @@ class SearchPage extends React.Component {
           </div>
         
           
+        </div>
+
+
+        <div className="search-result mb-5">
+          <div id="searchResultCarousel" className="carousel slide">
+            <div className="carousel-inner">
+              {/* <div class="carousel-item active">
+                <div className="test"></div>
+              </div>
+              <div class="carousel-item">
+                <div className="test2"></div>
+              
+              </div>
+              <div class="carousel-item">
+                <div className="test3"></div>
+              
+              </div> */}
+              { this.state.searchComponent }
+            </div>
+            <a className="carousel-control-prev" href="#searchResultCarousel" role="button" data-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="sr-only">Previous</span>
+            </a>
+            <a className="carousel-control-next" href="#searchResultCarousel" role="button" data-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="sr-only">Next</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="similar-result">
+
         </div>
       </div>
     );
