@@ -33,9 +33,15 @@ class SearchPage extends React.Component {
       maxPrice: 50,
       minRating: 3,
       restaurantName: [],
-      tagsList: []
+      tagsList: [],
+      nameInput: "",
+      tagInput: ""
     }
 
+    
+  }
+
+  componentDidMount() {
     axiosRequest({
       type: "get",
       url: "https://api.illinifoodies.xyz/restaurants/names",
@@ -68,14 +74,32 @@ class SearchPage extends React.Component {
         <div className="search-form">
           
           <div className="container">
-            <div className="row">
+            <div className="row mb-4">
               <div className="col">
                 <Autocomplete
                   id="highlights-demo"
                   options={this.state.restaurantName}
                   getOptionLabel={option => option}
+                  onSelect={(event) => {
+                    // console.log(event.target.value);
+                    this.setState({
+                      nameInput: event.target.value
+                    })
+                  }}
                   renderInput={params => (
-                    <TextField {...params} label="Restaurant Name" variant="outlined" fullWidth margin="normal" />
+                    <TextField 
+                        {...params} 
+                        label="Restaurant Name" 
+                        variant="outlined" 
+                        fullWidth margin="normal"
+                        onChange={(event) => {
+                          // console.log(event.target.value);
+                          this.setState({
+                            nameInput: event.target.value
+                          })
+                          // console.log(event.target.value);
+                        }}
+                         />
                   )}
                   renderOption={(option, { inputValue }) => {
                     const matches = match(option, inputValue);
@@ -108,9 +132,9 @@ class SearchPage extends React.Component {
                       {...params}
                       variant="outlined"
                       label="Tags"
-                      placeholder="Favorites"
                       margin="normal"
                       fullWidth
+                      
                     />
                   )}
                 />
@@ -120,7 +144,7 @@ class SearchPage extends React.Component {
 
             <div className="row">
               <div className="col">
-                <Typography id="range-slider" gutterBottom>
+                <Typography id="range-slider" gutterBottom className="mb-5">
                   Price range
                 </Typography>
                 <Slider
@@ -133,11 +157,12 @@ class SearchPage extends React.Component {
                     })
                   }}
                   valueLabelDisplay="on"
+                  className="mt-2"
                 />
               </div>
 
               <div className="col">
-                <Typography id="track-inverted-range-slider" gutterBottom>
+                <Typography id="track-inverted-range-slider" gutterBottom className="mb-5">
                   Minimum Rating
                 </Typography>
                 <Slider
@@ -153,6 +178,7 @@ class SearchPage extends React.Component {
                       minRating: newValue
                     })
                   }}
+                  className="mt-2"
                 />
               </div>
 
