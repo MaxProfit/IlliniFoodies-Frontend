@@ -217,19 +217,30 @@ $imageHeight: 80px;
 }
 
 .feed-wrapper {
-    border: 2px solid #90CAF9;
     position: relative;
     border-radius: .4em;
     padding: 20px;
     box-shadow: 0 .25rem 1rem rgba(0,0,0,.15)!important;
+    
+
+}
+
+.left-wrapper {
+    border: 2px solid #90CAF9;
+    border-bottom-left-radius: 0px;
+}
+
+.right-wrapper {
+    border: 2px solid #FFCC80;
+    border-bottom-right-radius: 0px;
 }
 
 
-.feed-wrapper:after {
+.left-side:after {
 	content: '';
 	position: absolute;
 	left: 0;
-	top: 50%;
+    bottom: -2px;
 	width: 0;
 	height: 0;
 	border: 20px solid transparent;
@@ -237,13 +248,29 @@ $imageHeight: 80px;
     border-left: 0;
 	border-bottom: 0;
 	margin-top: -10px;
-	margin-left: -20px;
+    margin-left: -20px;
+}
+
+.right-side:after {
+	content: '';
+	position: absolute;
+	right: 0;
+    bottom: -2px;
+    width: 0;
+	height: 0;
+	border: 20px solid transparent;
+	border-left-color: #FFCC80;
+	border-right: 0;
+	border-bottom: 0;
+	margin-top: -10px;
+	margin-right: -20px;
 }
 
 .feed-content-wrapper {
     margin-left: 20px;
-    
 }
+
+
 
 .quote-left-icon {
     margin-right: 10px;
@@ -257,4 +284,15 @@ $imageHeight: 80px;
 
 .feed-text {
     margin-top: 10px;
+}
+
+.quote-left-icon2 {
+    color: #E65100;
+    margin-right: 10px;
+    
+}
+
+.quote-right-icon2 {
+    color: #E65100;
+    margin-top: 5px;
 }

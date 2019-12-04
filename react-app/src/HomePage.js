@@ -20,23 +20,23 @@ import Rating from "./Rating";
 class Feed extends React.Component {
   render() {
     return (
-      <div className="feed-wrapper d-flex">
+      <div className={"feed-wrapper d-flex" + (this.props.side === "left" ? " left-wrapper" : " right-wrapper")}>
         <div className="user-img-wrapper">
           <img src="https://s3-media3.fl.yelpcdn.com/bphoto/s6neDI4X_Pnn5ZSohVWWNA/o.jpg" alt="User profile image" />
         </div>
-        <div className="feed-content-wrapper d-flex flex-column flex-grow-1">
+        <div className={"feed-content-wrapper d-flex flex-column flex-grow-1" + (this.props.side === "left" ? " left-side" : " right-side")}>
           <h4 className="feed-restaurant d-flex justify-content-start">Craving</h4>
           <div className="feed-rating d-flex justify-content-start mb-3">
             <Rating rating={5}></Rating>
           </div>
           <div className="feed-comment d-flex justify-content-start">
-            <FontAwesomeIcon icon={faQuoteLeft} className="quote-left-icon" />
+            <FontAwesomeIcon icon={faQuoteLeft} className={"quote-left-icon" + (this.props.side === "right" ? "2" : "")} />
             <span className="feed-text">"This is gud stuff. lah lah la alalala aha </span>
           </div>
           <div className="d-flex justify-content-end">
-            <FontAwesomeIcon icon={faQuoteRight} className="quote-right-icon" />
+            <FontAwesomeIcon icon={faQuoteRight} className={"quote-right-icon" + (this.props.side === "right" ? "2" : "")} />
           </div>
-          <div className="feed-user d-flex justify-content-end mt-3">― User Name</div>
+          <div className="feed-user d-flex justify-content-end mt-3">― Me and You</div>
         </div>
       </div>
     )
@@ -54,10 +54,20 @@ class FeedPage extends React.Component {
           <div className="row">
             <div className="col">
               
-              <Feed />
+              <Feed side="left" />
             </div>
             <div className="col">
 
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              
+            </div>
+            <div className="col">
+              
+              <Feed side="right" />
             </div>
           </div>
          </div>
