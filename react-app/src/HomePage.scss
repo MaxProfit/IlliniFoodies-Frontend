@@ -134,6 +134,7 @@ $imageHeight: 80px;
 
 .content-wrapper {
     min-height: 100vh;
+    padding-bottom: 20px;
 }
 
 .head-wrapper {
@@ -189,11 +190,16 @@ $imageHeight: 80px;
 .page-head2 {
     font-family: 'Dancing Script', cursive;
     margin-top: 70px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 
 .left-right-icon {
     color: #AB47BC;
     font-size: 25px;
+}
+
+.no-result {
+    margin-top: 70px;
+    margin-bottom: 50px;
 }

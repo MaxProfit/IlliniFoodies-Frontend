@@ -45,7 +45,8 @@ class SearchPage extends React.Component {
       searchResult: [],
       similarResult: [],
       searchComponent: [],
-      similarComponent: []
+      similarComponent: [],
+      noResult: false
     }
 
     
@@ -81,7 +82,8 @@ class SearchPage extends React.Component {
       searchComponent: [],
       searchResult: [],
       similarResult: [],
-      similarComponent: []
+      similarComponent: [],
+      noResult: false
     });
 
     var tagInputString = this.state.tagInput.join(",")
@@ -103,6 +105,12 @@ class SearchPage extends React.Component {
       self.setState({
         searchResult: response.data
       })
+
+      if (response.data.length === 0) {
+        self.setState({
+          noResult: true
+        })
+      }
 
       var searchResultCarousel = [];
       var searchResultSlide = [];
@@ -423,8 +431,14 @@ class SearchPage extends React.Component {
 
 
         <div className="search-result mb-5">
-          { this.state.searchComponent.length !== 0 && 
+          { (this.state.searchComponent.length !== 0 || this.state.noResult) && 
             <h2 className="page-head2">- Search Results -</h2>
+          }
+
+          { this.state.noResult && 
+            <div className="no-result">
+              Sorry. We do not find the restaurant for you :(
+            </div>
           }
               
           <div id="searchResultCarousel" className="carousel slide" data-interval="false">

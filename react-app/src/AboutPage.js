@@ -15,7 +15,7 @@ class AboutPage extends React.Component {
       },
       Eunice: {
         name: "Eunice Zhou",
-        role: "UI/UX",
+        role: "Front-End, UI/UX",
         github: "https://github.com/eunicornbread",
         website: "#",
         picture: "./images/eunice-profile.jpg"
