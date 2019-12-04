@@ -11,6 +11,8 @@ import match from 'autosuggest-highlight/match';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import { axiosRequest } from "./Util";
+import SearchIcon from '@material-ui/icons/Search';
+import Fab from '@material-ui/core/Fab';
 
 class FeedPae extends React.Component {
   render() {
@@ -35,7 +37,7 @@ class SearchPage extends React.Component {
       restaurantName: [],
       tagsList: [],
       nameInput: "",
-      tagInput: ""
+      tagInput: []
     }
 
     
@@ -66,6 +68,35 @@ class SearchPage extends React.Component {
       }
     });
   }
+
+  handleSearch() {
+    console.log("min price", this.state.minPrice);
+    console.log("max price", this.state.maxPrice);
+    console.log("min rating", this.state.minRating);
+    console.log("name", this.state.nameInput);
+    console.log("tags", this.state.tagInput);
+    var tagInputString = this.state.tagInput.join(",")
+
+    const axios = require('axios').default;
+    axios.get('https://api.illinifoodies.xyz/restaurants/search', {
+      params: {
+        minprice: this.state.minPrice,
+        maxprice: this.state.maxPrice,
+        minrating: this.state.minRating,
+        restaurantname: this.state.nameInput,
+        tags: tagInputString
+      }
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    });  
+  }
   
 
   render() {
@@ -73,7 +104,7 @@ class SearchPage extends React.Component {
       <div className="search-page">
         <div className="search-form">
           
-          <div className="container">
+          <div className="container mt-5">
             <div className="row mb-4">
               <div className="col">
                 <Autocomplete
@@ -86,6 +117,7 @@ class SearchPage extends React.Component {
                       nameInput: event.target.value
                     })
                   }}
+                  freeSolo
                   renderInput={params => (
                     <TextField 
                         {...params} 
@@ -99,6 +131,7 @@ class SearchPage extends React.Component {
                           })
                           // console.log(event.target.value);
                         }}
+
                          />
                   )}
                   renderOption={(option, { inputValue }) => {
@@ -126,6 +159,15 @@ class SearchPage extends React.Component {
                   id="tags-outlined"
                   options={this.state.tagsList}
                   getOptionLabel={option => option}
+                  onChange={(event) => {
+                    // console.log(event.target.innerHTML);
+                    var tags = this.state.tagInput;
+                    tags.push(event.target.innerHTML);
+                    this.setState({
+                      tagInput: tags
+                    })
+                  }}
+                  
                   filterSelectedOptions
                   renderInput={params => (
                     <TextField
@@ -142,7 +184,7 @@ class SearchPage extends React.Component {
               
             </div>
 
-            <div className="row">
+            <div className="row mb-4">
               <div className="col">
                 <Typography id="range-slider" gutterBottom className="mb-5">
                   Price range
@@ -162,27 +204,41 @@ class SearchPage extends React.Component {
               </div>
 
               <div className="col">
+                
+              </div>
+              
+              
+            </div>
+
+            <div className="row mb-4">
+              <div className="col">
                 <Typography id="track-inverted-range-slider" gutterBottom className="mb-5">
-                  Minimum Rating
-                </Typography>
-                <Slider
-                  track="inverted"
-                  aria-labelledby="track-inverted-range-slider"
-                  min={0}
-                  max={5}
-                  value={this.state.minRating}
-                  valueLabelDisplay="on"
-                  step={0.1}
-                  onChange={(event, newValue) => {
-                    this.setState({
-                      minRating: newValue
-                    })
-                  }}
-                  className="mt-2"
-                />
+                    Minimum Rating
+                  </Typography>
+                  <Slider
+                    track="inverted"
+                    aria-labelledby="track-inverted-range-slider"
+                    min={0}
+                    max={5}
+                    value={this.state.minRating}
+                    valueLabelDisplay="on"
+                    step={0.1}
+                    onChange={(event, newValue) => {
+                      this.setState({
+                        minRating: newValue
+                      })
+                    }}
+                    className="mt-2"
+                  />
               </div>
 
-            </div>
+              <div className="col">
+                <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) }>
+                  <SearchIcon className="search-icon" />
+                  <span className="search-txt">Search</span>
+                </Fab>
+              </div>
+              </div>
           </div>
         
           

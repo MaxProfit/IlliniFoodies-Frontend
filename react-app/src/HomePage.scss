@@ -165,3 +165,10 @@ $imageHeight: 80px;
     text-align: center;
     vertical-align: middle;
 }
+
+.search-btn:focus {
+    outline: none;
+}
+.search-txt {
+    margin-right: 4px;
+}
