@@ -16,8 +16,9 @@ import Fab from '@material-ui/core/Fab';
 import { InfoCard } from "./InfoCard";
 import Rating from "./Rating";
 
+import { createMuiTheme } from '@material-ui/core/styles';
 
-class FeedPae extends React.Component {
+class FeedPage extends React.Component {
   render() {
     return (
       <div className="feed-page">
@@ -43,7 +44,8 @@ class SearchPage extends React.Component {
       tagInput: [],
       searchResult: [],
       similarResult: [],
-      searchComponent: []
+      searchComponent: [],
+      similarComponent: []
     }
 
     
@@ -68,7 +70,6 @@ class SearchPage extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.status === 200) {
-          // console.log(response.data.body);
           this.setState({ tagsList: response.data.body });
         }
       }
@@ -76,13 +77,10 @@ class SearchPage extends React.Component {
   }
 
   handleSearch() {
-    // console.log("min price", this.state.minPrice);
-    // console.log("max price", this.state.maxPrice);
-    // console.log("min rating", this.state.minRating);
-    // console.log("name", this.state.nameInput);
-    // console.log("tags", this.state.tagInput);
-
-    // console.log("search");
+    this.setState({
+      searchComponent: [],
+      searchResult: []
+    });
 
     var tagInputString = this.state.tagInput.join(",")
 
@@ -94,11 +92,11 @@ class SearchPage extends React.Component {
         maxprice: this.state.maxPrice,
         minrating: this.state.minRating,
         restaurantname: this.state.nameInput,
-        tags: tagInputString
+        tags: tagInputString,
+        limit: 21
       }
     })
     .then(function (response) {
-      // console.log(response);
       self.setState({
         searchResult: response.data
       })
@@ -121,7 +119,6 @@ class SearchPage extends React.Component {
             ></InfoCard>
         );
         
-        // console.log(searchResultSlide);
         if ((index + 1) % 3 === 0) {
           if (index == 2) {
             searchResultCarousel.push(
@@ -179,16 +176,9 @@ class SearchPage extends React.Component {
     });  
   }
   
-  // <div class="carousel-item">
-  //               <div className="test2"></div>
-              
-  //             </div>
-
+  
   render() {
-    // console.log("hi:", this.state.searchResult);
-    
-
-    // console.log(searchResultCarousel.length);
+   
 
     return (
       <div className="search-page">
@@ -319,7 +309,7 @@ class SearchPage extends React.Component {
               </div>
 
               <div className="col d-flex justify-content-end align-items-center mt-4">
-                <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) }>
+                <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) } id="search-btn">
                   <SearchIcon className="search-icon" />
                   <span className="search-txt">Search</span>
                 </Fab>
@@ -332,34 +322,36 @@ class SearchPage extends React.Component {
 
 
         <div className="search-result mb-5">
+          { this.state.searchComponent.length !== 0 && 
+            <h2 className="page-head2">- Search Results -</h2>
+          }
+              
           <div id="searchResultCarousel" className="carousel slide">
             <div className="carousel-inner">
-              {/* <div class="carousel-item active">
-                <div className="test"></div>
-              </div>
-              <div class="carousel-item">
-                <div className="test2"></div>
-              
-              </div>
-              <div class="carousel-item">
-                <div className="test3"></div>
-              
-              </div> */}
               { this.state.searchComponent }
             </div>
-            <a className="carousel-control-prev" href="#searchResultCarousel" role="button" data-slide="prev">
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span className="sr-only">Previous</span>
-            </a>
-            <a className="carousel-control-next" href="#searchResultCarousel" role="button" data-slide="next">
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
-              <span className="sr-only">Next</span>
-            </a>
+
+            { this.state.searchComponent.length !== 0 && 
+            <>
+              <a className="carousel-control-prev text-primary" href="#searchResultCarousel" role="button" data-slide="prev">
+                <span className="carousel-control-prev-icon text-primary" aria-hidden="true"></span>
+                <span className="sr-only">Previous</span>
+              </a>
+              <a className="carousel-control-next" href="#searchResultCarousel" role="button" data-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="sr-only">Next</span>
+              </a>
+              </>
+            }
+            
           </div>
         </div>
 
         <div className="similar-result">
-
+          { this.state.similarComponent.length !== 0 && 
+            <h2 className="page-head2">- Similar Restaurants -</h2>
+          }
+          
         </div>
       </div>
     );
@@ -438,8 +430,8 @@ class HomePage extends React.Component {
         <div className="content-wrapper">
           { this.state.active === "home" && 
 
-            <div>
-              
+            <div className="text-center">
+              <h2 className="page-head">- Top Picks For You -</h2>
               <InfoBar title="TOP PICKS NEAR YOU" 
                        page="home page" 
                        recommendList={this.props.recommendList} 
@@ -448,7 +440,8 @@ class HomePage extends React.Component {
           }
 
           { this.state.active === "like" && 
-            <div>
+            <div className="text-center">
+              <h2 className="page-head">- Your Favorites -</h2>
               <InfoBar title="Favorite Restaurants" 
                        page="like page" 
                        favRestaurants={this.props.favRestaurants} 
@@ -457,13 +450,15 @@ class HomePage extends React.Component {
           }
 
           { this.state.active === "follow" && 
-            <div>
-              <FeedPae />              
+            <div className="text-center">
+              <h2 className="page-head">- Your Feeds -</h2>
+              <FeedPage />              
             </div>
           }
 
           { this.state.active === "search" && 
-            <div>
+            <div className="text-center">
+              <h2 className="page-head">- Find A Restaurant -</h2>
               <SearchPage />
             </div>
           }
