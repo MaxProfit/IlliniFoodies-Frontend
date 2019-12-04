@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Grid from '@material-ui/core/Grid';
+import parse from 'autosuggest-highlight/parse';
+import match from 'autosuggest-highlight/match';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
+import { axiosRequest } from "./Util";
 
 class FeedPae extends React.Component {
   render() {
@@ -22,28 +26,164 @@ class FeedPae extends React.Component {
 }
 
 class SearchPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      minPrice: 10,
+      maxPrice: 50,
+      minRating: 3,
+      restaurantName: [],
+      tagsList: []
+    }
+
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/restaurants/names",
+      data: {},
+      onSuccess: response => {
+        if (response.status === 200) {
+          console.log(response.data.body);
+          // this.setState({ like: true });
+        }
+      }
+    });
+
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/restaurants/tags",
+      data: {},
+      onSuccess: response => {
+        if (response.status === 200) {
+          // console.log(response.data);
+          // this.setState({ like: true });
+        }
+      }
+    });
+  }
   
+
   render() {
     return (
       <div className="search-page">
         <div className="search-form">
+          
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <Autocomplete
+                  id="highlights-demo"
+                  getOptionLabel={option => option.title}
+                  renderInput={params => (
+                    <TextField {...params} label="Restaurant Name" variant="outlined" fullWidth margin="normal" />
+                  )}
+                  renderOption={(option, { inputValue }) => {
+                    const matches = match(option.title, inputValue);
+                    const parts = parse(option.title, matches);
 
-          <Autocomplete
-          freeSolo
-          id="free-solo-2-demo"
-          disableClearable
-          // options={top100Films.map(option => option.title)}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="Search input"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              InputProps={{ ...params.InputProps, type: 'search' }}
-            />
-          )}
-        />
+                    return (
+                      <div>
+                        {parts.map((part, index) => (
+                          <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                            {part.text}
+                          </span>
+                        ))}
+                      </div>
+                    );
+                  }}
+                />
+              </div>
+
+              <div className="col">
+                {/* <Autocomplete
+                  multiple
+                  id="checkboxes-tags-demo"
+                  disableCloseOnSelect
+                  getOptionLabel={option => option.title}
+                  renderOption={(option, { selected }) => (
+                    <React.Fragment>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.title}
+                    </React.Fragment>
+                  )}
+                  style={{ width: 500 }}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Checkboxes"
+                      placeholder="Favorites"
+                      fullWidth
+                    />
+                  )}
+                /> */}
+
+                <Autocomplete
+                  multiple
+                  id="tags-outlined"
+                  getOptionLabel={option => option.title}
+                  filterSelectedOptions
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Tags"
+                      placeholder="Favorites"
+                      margin="normal"
+                      fullWidth
+                    />
+                  )}
+                />
+              </div>
+              
+            </div>
+
+            <div className="row">
+              <div className="col">
+                <Typography id="range-slider" gutterBottom>
+                  Price range
+                </Typography>
+                <Slider
+                  value={[this.state.minPrice, this.state.maxPrice]}
+                  aria-labelledby="range-slider"
+                  onChange={(event, newValue) => {
+                    this.setState({
+                      minPrice: newValue[0],
+                      maxPrice: newValue[1]
+                    })
+                  }}
+                  valueLabelDisplay="on"
+                />
+              </div>
+
+              <div className="col">
+                <Typography id="track-inverted-range-slider" gutterBottom>
+                  Minimum Rating
+                </Typography>
+                <Slider
+                  track="inverted"
+                  aria-labelledby="track-inverted-range-slider"
+                  min={0}
+                  max={5}
+                  value={this.state.minRating}
+                  valueLabelDisplay="on"
+                  step={0.1}
+                  onChange={(event, newValue) => {
+                    this.setState({
+                      minRating: newValue
+                    })
+                  }}
+                />
+              </div>
+
+            </div>
+          </div>
+        
+          
         </div>
       </div>
     );
