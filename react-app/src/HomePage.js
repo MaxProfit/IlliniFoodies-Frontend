@@ -3,7 +3,7 @@ import InfoBar from "./InfoBar";
 import './HomePage.scss';
 import Typist from 'react-typist';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faHeart, faUsers, faSearch, faChevronLeft, faChevronRight, faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faHeart, faUsers, faSearch, faQuoteLeft, faQuoteRight, faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import parse from 'autosuggest-highlight/parse';
@@ -16,16 +16,52 @@ import Fab from '@material-ui/core/Fab';
 import { InfoCard } from "./InfoCard";
 import Rating from "./Rating";
 
-import { createMuiTheme } from '@material-ui/core/styles';
+
+class Feed extends React.Component {
+  render() {
+    return (
+      <div className="feed-wrapper d-flex">
+        <div className="user-img-wrapper">
+          <img src="https://s3-media3.fl.yelpcdn.com/bphoto/s6neDI4X_Pnn5ZSohVWWNA/o.jpg" alt="User profile image" />
+        </div>
+        <div className="feed-content-wrapper d-flex flex-column flex-grow-1">
+          <h4 className="feed-restaurant d-flex justify-content-start">Craving</h4>
+          <div className="feed-rating d-flex justify-content-start mb-3">
+            <Rating rating={5}></Rating>
+          </div>
+          <div className="feed-comment d-flex justify-content-start">
+            <FontAwesomeIcon icon={faQuoteLeft} className="quote-left-icon" />
+            <span className="feed-text">"This is gud stuff. lah lah la alalala aha </span>
+          </div>
+          <div className="d-flex justify-content-end">
+            <FontAwesomeIcon icon={faQuoteRight} className="quote-right-icon" />
+          </div>
+          <div className="feed-user d-flex justify-content-end mt-3">― User Name</div>
+        </div>
+      </div>
+    )
+  }
+}
 
 class FeedPage extends React.Component {
   render() {
     return (
       <div className="feed-page">
-        <div className="d-flex head-wrapper">
+        {/* <div className="d-flex head-wrapper">
         </div>
-        
-        
+         */}
+         <div className="container mt-5">
+          <div className="row">
+            <div className="col">
+              
+              <Feed />
+            </div>
+            <div className="col">
+
+            </div>
+          </div>
+         </div>
+         
       </div>
     )
   }
@@ -204,7 +240,8 @@ class SearchPage extends React.Component {
       }
     })
     .then(function (response) {
-      console.log(response.data);
+      console.log("tags", tagInputString);
+      console.log("similar", response.data);
       self.setState({
         similarResult: response.data
       })
@@ -495,7 +532,7 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "search"
+      active: "follow"
     }
   }
 
