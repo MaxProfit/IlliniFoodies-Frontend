@@ -42,8 +42,8 @@ class SearchPage extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.status === 200) {
-          console.log(response.data.body);
-          // this.setState({ like: true });
+          // console.log(response.data.body);
+          this.setState({ restaurantName: response.data.body });
         }
       }
     });
@@ -54,8 +54,8 @@ class SearchPage extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.status === 200) {
-          // console.log(response.data);
-          // this.setState({ like: true });
+          // console.log(response.data.body);
+          this.setState({ tagsList: response.data.body });
         }
       }
     });
@@ -72,13 +72,14 @@ class SearchPage extends React.Component {
               <div className="col">
                 <Autocomplete
                   id="highlights-demo"
-                  getOptionLabel={option => option.title}
+                  options={this.state.restaurantName}
+                  getOptionLabel={option => option}
                   renderInput={params => (
                     <TextField {...params} label="Restaurant Name" variant="outlined" fullWidth margin="normal" />
                   )}
                   renderOption={(option, { inputValue }) => {
-                    const matches = match(option.title, inputValue);
-                    const parts = parse(option.title, matches);
+                    const matches = match(option, inputValue);
+                    const parts = parse(option, matches);
 
                     return (
                       <div>
@@ -94,38 +95,13 @@ class SearchPage extends React.Component {
               </div>
 
               <div className="col">
-                {/* <Autocomplete
-                  multiple
-                  id="checkboxes-tags-demo"
-                  disableCloseOnSelect
-                  getOptionLabel={option => option.title}
-                  renderOption={(option, { selected }) => (
-                    <React.Fragment>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.title}
-                    </React.Fragment>
-                  )}
-                  style={{ width: 500 }}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Checkboxes"
-                      placeholder="Favorites"
-                      fullWidth
-                    />
-                  )}
-                /> */}
+                
 
                 <Autocomplete
                   multiple
                   id="tags-outlined"
-                  getOptionLabel={option => option.title}
+                  options={this.state.tagsList}
+                  getOptionLabel={option => option}
                   filterSelectedOptions
                   renderInput={params => (
                     <TextField
