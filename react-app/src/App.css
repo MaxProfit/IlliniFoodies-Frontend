@@ -2,6 +2,12 @@
   max-height: 30px;
 }
 
+.profile-image {
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+}
+
 .foodie-header {
   background-image: url("./images/foodie-header.jpg");
   width: 100%;
@@ -144,5 +150,5 @@
 }
 
 .navbar-yellow {
-  opacity: 0.6;
+  opacity: 0.4;
 }
