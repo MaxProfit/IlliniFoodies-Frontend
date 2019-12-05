@@ -102,9 +102,13 @@ class App extends React.Component {
   }
 
   getRatings(userId) {
+    var url = "https://api.illinifoodies.xyz/ratings";
+    if (url !== null) {
+      url += ("/loggedin/" + userId);
+    }
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/ratings",
+      url: url,
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
@@ -291,6 +295,7 @@ class App extends React.Component {
             this.refreshFollowing();
             this.getFavRestaurant(userid);
             this.getRecommendation(userid);
+            this.getRatings(userid);
           }
         }
       });

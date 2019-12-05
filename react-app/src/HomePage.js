@@ -50,7 +50,7 @@ class FeedPage extends React.Component {
   
   render() {
     var feedComponent = [];
-    this.props.ratingList.reverse().forEach((element, index) => {
+    this.props.ratingList.forEach((element, index) => {
       if (index % 2 === 0) {
         feedComponent.push(
           <div className="row" key={"row-"+index}>
