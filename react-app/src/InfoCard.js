@@ -180,7 +180,7 @@ export const InfoCard = class InfoCard extends React.Component {
             ContentProps={{
               'aria-describedby': 'message-id',
             }}
-            message={<span id="message-id">Add To Favorites</span>}
+            message={<span id="message-id">Added to favorites!</span>}
             action={[
               <IconButton
                 key="close"
@@ -204,7 +204,7 @@ export const InfoCard = class InfoCard extends React.Component {
             ContentProps={{
               'aria-describedby': 'message-id',
             }}
-            message={<span id="message-id">Remove From Favorites</span>}
+            message={<span id="message-id">Removed from favorites!</span>}
             action={[
               <IconButton
                 key="close"

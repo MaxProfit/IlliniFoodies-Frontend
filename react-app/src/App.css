@@ -133,6 +133,10 @@
   font-size: 2rem;
 }
 
+.settings-modal {
+  height: 500px;
+}
+
 @media (min-width: 576px) {
   .custom-jumbotron {
     padding: 4rem 2rem;
