@@ -16,6 +16,11 @@ import { axiosRequest, setCookie, getCookie } from "./Util";
 import Modal from "react-bootstrap/Modal";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Slider from "@material-ui/core/Slider";
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 class App extends React.Component {
   constructor(props) {
@@ -26,8 +31,12 @@ class App extends React.Component {
       following: [], // contains user objects for the users that the current user is following, not just ids
       links: ["Home", "About"], // non user-specific navbar links
       showFriendsModal: false,
-      showFavoritesModal: false,
       showSettingsModal: false,
+      settingsFormDisabled: true,
+      settingsNickname: "",
+      settingsPicture: "",
+      settingsPriceRange: [],
+      settingsSnackbarOpenAdd: false,
       userSearch: "", // relevant to user search in the friends modal
       userSearchResults: [],
       showFollows: true, // relevant to whether we should show follows or search results in the friends modal
@@ -39,9 +48,19 @@ class App extends React.Component {
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
-    this.toggleFavorites = this.toggleFavorites.bind(this);
     this.toggleFriends = this.toggleFriends.bind(this);
+    this.editSettings = this.editSettings.bind(this);
+    this.saveSettingsChanges = this.saveSettingsChanges.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
+    this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(this);
+
+    this.handleSettingsNicknameChange = this.handleSettingsNicknameChange.bind(
+      this
+    );
+    this.handleSettingsPriceChange = this.handleSettingsPriceChange.bind(this);
+    this.handleSettingsPictureChange = this.handleSettingsPictureChange.bind(
+      this
+    );
 
     this.handleSearchUserInputChange = this.handleSearchUserInputChange.bind(
       this
@@ -62,7 +81,7 @@ class App extends React.Component {
       onSuccess: response => {
         if (response.data !== undefined) {
           // console.log(response.data);
-          this.setState({favRestaurants : response.data });
+          this.setState({ favRestaurants: response.data });
         }
       }
     });
@@ -76,7 +95,7 @@ class App extends React.Component {
       onSuccess: response => {
         if (response.data !== undefined) {
           // console.log(response);
-          this.setState({recommendList : response.data });
+          this.setState({ recommendList: response.data });
         }
       }
     });
@@ -90,14 +109,14 @@ class App extends React.Component {
       onSuccess: response => {
         if (response.data !== undefined) {
           // console.log(response);
-          this.setState({ratingList : response.data });
+          this.setState({ ratingList: response.data });
         }
       }
     });
   }
 
   signIn(userId) {
-    console.log("in signin")
+    console.log("in signin");
     console.log(userId);
     // set the user state variable (this function is called through the signup page)
     axiosRequest({
@@ -122,16 +141,12 @@ class App extends React.Component {
   }
 
   // handlers to toggle the show/hide state variable for various user specific info modals
-  toggleFavorites(show) {
-    this.setState({ showFavoritesModal: show });
-  }
-
   toggleFriends(show) {
     this.setState({ showFriendsModal: show });
   }
 
   toggleSettings(show) {
-    this.setState({ showSettingsModal: show });
+    this.setState({ showSettingsModal: show, settingsFormDisabled: true });
   }
 
   createUserNavItem() {
@@ -167,9 +182,6 @@ class App extends React.Component {
 
             <Dropdown.Menu alignRight>
               <Dropdown.Header>{this.state.user.Nickname}</Dropdown.Header>
-              <Dropdown.Item onClick={this.toggleFavorites.bind(this, true)}>
-                <i className="fa fa-heart text-danger mr-3"></i>Favorites
-              </Dropdown.Item>
               <Dropdown.Item onClick={this.toggleFriends.bind(this, true)}>
                 <i className="fa fa-users text-primary mr-3"></i>Friends
               </Dropdown.Item>
@@ -224,7 +236,8 @@ class App extends React.Component {
       PriceMax: this.state.user.PriceMax,
       Nickname: this.state.user.Nickname,
       Picture: this.state.user.Picture,
-      Following: followingCopy // only this has changed
+      Following: followingCopy, // only this has changed
+      FavoriteRestaurants: this.state.user.FavoriteRestaurants,
     };
 
     axiosRequest({
@@ -248,7 +261,10 @@ class App extends React.Component {
   refreshFollowing() {
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following",
+      url:
+        "https://api.illinifoodies.xyz/users/" +
+        this.state.user.Id +
+        "/following",
       data: {},
       onSuccess: response => {
         this.setState({
@@ -284,8 +300,53 @@ class App extends React.Component {
       this.getRecommendation(null);
       this.getRatings(null);
     } else {
-
     }
+  }
+
+  editSettings() {
+    this.setState({
+      settingsFormDisabled: false,
+      settingsNickname: this.state.user.Nickname,
+      settingsPicture: this.state.user.Picture,
+      settingsPriceRange: [this.state.user.PriceMin, this.state.user.PriceMax]
+    });
+  }
+
+  handleSettingsNicknameChange(event) {
+    this.setState({ settingsNickname: event.target.value });
+  }
+
+  handleSettingsPictureChange(event) {
+    this.setState({ settingsPicture: event.target.value });
+  }
+
+  handleSettingsPriceChange(event, newPriceRange) {
+    this.setState({ settingsPriceRange: newPriceRange });
+  }
+
+  saveSettingsChanges() {
+    let updatedUser = {
+      Id: this.state.user.Id,
+      PriceMin: this.state.settingsPriceRange[0],
+      PriceMax: this.state.settingsPriceRange[1],
+      Nickname: this.state.settingsNickname,
+      Picture: this.state.settingsPicture,
+      Following: this.state.user.Following,
+      FavoriteRestaurants: this.state.user.FavoriteRestaurants
+    };
+
+    axiosRequest({
+      type: "put",
+      url: "https://api.illinifoodies.xyz/user/" + this.state.user.Id,
+      data: updatedUser,
+      onSuccess: response => {
+        this.setState({ user: updatedUser, settingsSnackbarOpenAdd: true });
+      }
+    });
+  }
+
+  handleSettingsSnackbarClose(){
+    this.setState({settingsSnackbarOpenAdd: false});
   }
 
   render() {
@@ -305,19 +366,68 @@ class App extends React.Component {
     // begin user-specific UI updates
     if (this.state.user !== null) {
       // display user settings
+      const marks = [0, 10, 20, 30, 40, 50, 60].map(tick => ({
+        value: tick,
+        label: "$" + tick.toString()
+      }));
+
+      var settingsModalButton = (
+        <button
+          type="button"
+          className="btn btn-dark w-100 mt-4"
+          onClick={this.editSettings}
+        >
+          Edit Settings
+        </button>
+      );
+      if (!this.state.settingsFormDisabled) {
+        settingsModalButton = (
+          <button
+            type="button"
+            className="btn btn-success w-100 mt-4"
+            onClick={this.saveSettingsChanges}
+          >
+            Save Changes
+          </button>
+        );
+      }
+
       var settingsList = (
-        <dl>
-          <dt>Nickname</dt> <dd>{this.state.user.Nickname}</dd>
-          <dt>Profile Picture URL</dt> <dd>{this.state.user.Picture}</dd>
-          <dt>Preferred Price Range</dt>
-          <dd>
-            {"($" +
-              this.state.user.PriceMin +
-              ", $" +
-              this.state.user.PriceMax +
-              ")"}
-          </dd>
-        </dl>
+        <form className="d-flex flex-column align-items-center p-4">
+          <TextField
+            id="settings-nickname"
+            className="w-100"
+            variant="outlined"
+            label="Nickname"
+            defaultValue={this.state.user.Nickname}
+            disabled={this.state.settingsFormDisabled}
+            onChange={this.handleSettingsNicknameChange}
+          ></TextField>
+          <TextField
+            id="settings-picture"
+            className="w-100 mt-4"
+            variant="outlined"
+            label="Picture"
+            defaultValue={this.state.user.Picture}
+            disabled={this.state.settingsFormDisabled}
+            onChange={this.handleSettingsPictureChange}
+          ></TextField>
+          <Slider
+            nickname="settings-price"
+            className="w-100 mt-4"
+            label="Price Range"
+            onChange={this.handleSettingsPriceChange}
+            defaultValue={[this.state.user.PriceMin, this.state.user.PriceMax]}
+            aria-labelledby="range-slider"
+            valueLabelDisplay="auto"
+            step={5}
+            marks={marks}
+            min={marks[0].value}
+            max={marks[marks.length - 1].value}
+            disabled={this.state.settingsFormDisabled}
+          />
+          {settingsModalButton}
+        </form>
       );
 
       // display users that the current user is following
@@ -335,12 +445,14 @@ class App extends React.Component {
         }
         // otherwise, map each user we are following to a UI component
         else {
-          followModalContents = this.state.following.map(function(anotherUser, index) {
-            if(index === 0) {
-              var header = <h6 className="mt-3 mb-3">You are following</h6>
-            }
-            else {
-              header = <hr/>
+          followModalContents = this.state.following.map(function(
+            anotherUser,
+            index
+          ) {
+            if (index === 0) {
+              var header = <h6 className="mt-3 mb-3">You are following</h6>;
+            } else {
+              header = <hr />;
             }
 
             return (
@@ -409,6 +521,30 @@ class App extends React.Component {
 
     return (
       <div className="App">
+      <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.settingsSnackbarOpenAdd}
+            autoHideDuration={6000}
+            onClose={this.handleSettingsSnackbarClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Updated settings!</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="close"
+                color="inherit"
+                onClick={this.handleSettingsSnackbarClose}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+
         <Router>
           <div className="fixed-top">
             <Navbar bg="dark" expand="sm" className="bg-dark fixed-top pt-3">
@@ -439,40 +575,35 @@ class App extends React.Component {
             ></div>
           </div>
 
-          <Route exact path="/" component={() => <HomePage 
-                                                    favRestaurants={this.state.favRestaurants} 
-                                                    user={this.state.user} 
-                                                    recommendList={this.state.recommendList}
-                                                    ratingList={this.state.ratingList}
-                                                  />} />
-          <Route path="/home" component={() => <HomePage 
-                                                    favRestaurants={this.state.favRestaurants} 
-                                                    user={this.state.user} 
-                                                    recommendList={this.state.recommendList}
-                                                    ratingList={this.state.ratingList}
-                                                />} />
+          <Route
+            exact
+            path="/"
+            component={() => (
+              <HomePage
+                favRestaurants={this.state.favRestaurants}
+                user={this.state.user}
+                recommendList={this.state.recommendList}
+                ratingList={this.state.ratingList}
+              />
+            )}
+          />
+          <Route
+            path="/home"
+            component={() => (
+              <HomePage
+                favRestaurants={this.state.favRestaurants}
+                user={this.state.user}
+                recommendList={this.state.recommendList}
+                ratingList={this.state.ratingList}
+              />
+            )}
+          />
           <Route path="/about" component={AboutPage} />
           <Route
             path="/signin"
             component={() => <SignUp signIn={this.signIn}></SignUp>}
           />
         </Router>
-
-        <Modal
-          show={this.state.showFavoritesModal}
-          onHide={this.toggleFavorites.bind(this, false)}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>
-              {" "}
-              <i className="fa fa-heart text-danger mr-3"></i>Favorites
-            </Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <p>You have no favorites saved.</p>
-          </Modal.Body>
-        </Modal>
 
         <Modal
           show={this.state.showFriendsModal}
@@ -508,6 +639,7 @@ class App extends React.Component {
         </Modal>
 
         <Modal
+          size="lg"
           show={this.state.showSettingsModal}
           onHide={this.toggleSettings.bind(this, false)}
         >

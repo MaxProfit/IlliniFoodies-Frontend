@@ -148,25 +148,26 @@ class SignUp extends React.Component {
         ></CustomForm>
       );
     } else if (this.state.currentForm === 2) {
-      const marks = [5, 10, 15, 20, 25, 30].map(tick => ({
+      const marks = [0, 10, 20, 30, 40, 50, 60].map(tick => ({
         value: tick,
         label: "$" + tick.toString()
       }));
+
       form = (
         <CustomForm
           question="How much are you willing to spend on food?"
           tip="Read: Rate yourself on a scale from broke to not broke"
           customInput={
             <Slider
-              className="mt-5 custom-slider"
+              className="mt-5"
               onChange={this.handlePriceRangeChange}
               defaultValue={this.defaultPriceRange}
               aria-labelledby="range-slider"
               valueLabelDisplay="auto"
               step={5}
               marks={marks}
-              min={5}
-              max={30}
+              min={marks[0].value}
+              max={marks[marks.length - 1].value}
             />
           }
           buttonType="submit"
