@@ -258,13 +258,19 @@ class App extends React.Component {
     //     this.refreshFollowing();
     //   }
     // });
+    var self = this;
 
     axiosRequest({
       type: "put",
       url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following/" + anotherUserID,
       onSuccess: response => {
         // this.setState({ user: updatedUser });
-
+        
+        var following = this.state.following;
+        following.push(anotherUserID);
+        this.setState({
+          following: following
+        })
         // callback to update user blurb UI
         userBlurbCallback();
 
