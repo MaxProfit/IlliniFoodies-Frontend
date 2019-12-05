@@ -3,7 +3,10 @@ import React from "react";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
 import { axiosRequest, setCookie } from "./Util";
-import "./SignUp.scss";
+import Stepper from "@material-ui/core/Stepper";
+import StepButton from "@material-ui/core/StepButton";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
 
 const jwt = require("jsonwebtoken");
 
@@ -13,6 +16,7 @@ class SignUp extends React.Component {
 
     // default price range for sign up price selector
     this.defaultPriceRange = [10, 20];
+    this.steps = ["Choose your nickname", "Add a profile image", "Preferences"];
 
     this.state = {
       userid: null,
@@ -101,8 +105,10 @@ class SignUp extends React.Component {
 
   // move to the next form in the form slideshow
   nextForm() {
-    if((this.state.currentForm === 0 && this.state.nickname === null) 
-      || (this.state.currentForm === 1 && this.state.picture === null)) {
+    if (
+      (this.state.currentForm === 0 && this.state.nickname === null) ||
+      (this.state.currentForm === 1 && this.state.picture === null)
+    ) {
       return;
     }
     this.setState({ currentForm: this.state.currentForm + 1 });
@@ -148,7 +154,7 @@ class SignUp extends React.Component {
           customInput={
             <div className="d-flex flex-column align-items-center">
               <Slider
-                className="mt-5 custom-slider" 
+                className="mt-5 custom-slider"
                 onChange={this.handlePriceRangeChange}
                 defaultValue={this.defaultPriceRange}
                 aria-labelledby="range-slider"
@@ -179,9 +185,17 @@ class SignUp extends React.Component {
     }
 
     return (
-      <div className="signup-header">
-        <div className="overlay-signup"></div>
-        {form}
+      <div className="signup-page bg-dark">
+        <div className="signup-form text-white">
+          {form}
+          <Stepper className="bg-transparent mt-3" activeStep={this.state.currentForm} alternativeLabel>
+            {this.steps.map(label => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
       </div>
     );
   }
@@ -192,7 +206,7 @@ class CustomForm extends React.Component {
     if (this.props.inputOnChange !== undefined) {
       var interactiveInput = (
         <input
-          className="form-control"
+          className="form-control w-50"
           label={this.props.inputPlaceholder}
           onChange={this.props.inputOnChange}
           onKeyPress={event => {
@@ -209,7 +223,7 @@ class CustomForm extends React.Component {
     }
 
     return (
-      <form className="signup-form text-white">
+      <form className="d-flex flex-column align-items-center w-100">
         <h1>{this.props.question}</h1>
         <h5>
           <i>{this.props.tip}</i>

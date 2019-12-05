@@ -2,10 +2,6 @@
   max-height: 30px;
 }
 
-body {
-  background-color: #11111150;
-}
-
 .foodie-header {
   background-image: url("./images/foodie-header.jpg");
   width: 100%;
@@ -108,16 +104,27 @@ body {
   justify-content: center;
   align-items: center;
 
-  border: white solid 0.1rem;
+  text-align: center;
+
+  background-image: linear-gradient(to top left, #43cea2,#185a9d);
   border-radius: 1.25rem;
 
   width: 70%;
-  height: 400px;
+  height: 60vh;
 
   margin-top: 5rem;
   margin-right: 0rem;
 
   z-index: 6;
+}
+
+.signup-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100vh;
 }
 
 .signup-form input {
