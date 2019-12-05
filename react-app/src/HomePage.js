@@ -36,7 +36,7 @@ class Feed extends React.Component {
           <div className="d-flex justify-content-end">
             <FontAwesomeIcon icon={faQuoteRight} className={"quote-right-icon" + (this.props.side === "right" ? "2" : "")} />
           </div>
-          <div className="feed-user d-flex justify-content-end mt-3">― Me and You</div>
+          <div className="feed-user d-flex justify-content-end mt-4">― Me and You</div>
         </div>
       </div>
     )
