@@ -57,7 +57,7 @@ class SignUp extends React.Component {
         decodedToken.payload["cognito:username"],
       data: {},
       onSuccess: response => {
-        if (response.data.PriceMin !== undefined) {
+        if (response.data.Item.PriceMin !== undefined) {
           this.props.signIn(decodedToken.payload["cognito:username"]);
         }
       }
@@ -126,9 +126,12 @@ class SignUp extends React.Component {
         <CustomForm
           key={"get-nickname"}
           question="What should we call you?"
-          tip="Your friends will see this name when you interact on our social pages"
           inputOnChange={this.handleNicknameChange}
           inputOnEnter={this.nextForm}
+          inputPlaceholder="Your friends will see this name when you interact on our social pages"
+          buttonType="button"
+          buttonText="Next"
+          buttonOnClickHandler={this.nextForm}
         ></CustomForm>
       );
     } else if (this.state.currentForm === 1) {
@@ -136,10 +139,12 @@ class SignUp extends React.Component {
         <CustomForm
           key={"get-profile-picture"}
           question="Upload a profile picture?"
-          tip="Enter direct url to the image (.jpg, .png, etc.)"
           inputOnChange={this.handlePictureChange}
-          inputPlaceholder="Enter direct url to the image (.jpg, .png, etc)"
+          inputPlaceholder="Enter direct url to the image on Imgur (.jpg, .png, etc)"
           inputOnEnter={this.nextForm}
+          buttonType="button"
+          buttonText="Next"
+          buttonOnClickHandler={this.nextForm}
         ></CustomForm>
       );
     } else if (this.state.currentForm === 2) {
@@ -152,27 +157,21 @@ class SignUp extends React.Component {
           question="How much are you willing to spend on food?"
           tip="Read: Rate yourself on a scale from broke to not broke"
           customInput={
-            <div className="d-flex flex-column align-items-center">
-              <Slider
-                className="mt-5 custom-slider"
-                onChange={this.handlePriceRangeChange}
-                defaultValue={this.defaultPriceRange}
-                aria-labelledby="range-slider"
-                valueLabelDisplay="auto"
-                step={5}
-                marks={marks}
-                min={5}
-                max={30}
-              />
-              <button
-                className="btn btn-outline-light mt-5 w-50"
-                type="submit"
-                onClick={this.submitUserSetup}
-              >
-                Done
-              </button>
-            </div>
+            <Slider
+              className="mt-5 custom-slider"
+              onChange={this.handlePriceRangeChange}
+              defaultValue={this.defaultPriceRange}
+              aria-labelledby="range-slider"
+              valueLabelDisplay="auto"
+              step={5}
+              marks={marks}
+              min={5}
+              max={30}
+            />
           }
+          buttonType="submit"
+          buttonText="Done"
+          buttonOnClickHandler={this.submitUserSetup}
         ></CustomForm>
       );
     } else if (this.state.currentForm === 3) {
@@ -188,7 +187,11 @@ class SignUp extends React.Component {
       <div className="signup-page bg-dark">
         <div className="signup-form text-white">
           {form}
-          <Stepper className="bg-transparent mt-3" activeStep={this.state.currentForm} alternativeLabel>
+          <Stepper
+            className="bg-transparent mt-3"
+            activeStep={this.state.currentForm}
+            alternativeLabel
+          >
             {this.steps.map(label => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -205,8 +208,12 @@ class CustomForm extends React.Component {
   render() {
     if (this.props.inputOnChange !== undefined) {
       var interactiveInput = (
-        <input
-          className="form-control w-50"
+        <TextField
+          className="w-50 mt-4"
+          inputProps={{
+            style: { textAlign: "center", color: "white", fontSize: "1.5rem" }
+          }}
+          variant="standard"
           label={this.props.inputPlaceholder}
           onChange={this.props.inputOnChange}
           onKeyPress={event => {
@@ -216,10 +223,23 @@ class CustomForm extends React.Component {
           }}
           key={this.props.key}
           autofocus
-        />
+        ></TextField>
       );
     } else {
       interactiveInput = <div className="w-75">{this.props.customInput}</div>;
+    }
+
+    var button = <div></div>;
+    if (this.props.buttonText != undefined) {
+      button = (
+        <button
+          className="btn btn-outline-light mt-5 w-50"
+          type={this.props.buttonType}
+          onClick={this.props.buttonOnClickHandler}
+        >
+          {this.props.buttonText}
+        </button>
+      );
     }
 
     return (
@@ -229,6 +249,7 @@ class CustomForm extends React.Component {
           <i>{this.props.tip}</i>
         </h5>
         {interactiveInput}
+        {button}
       </form>
     );
   }
