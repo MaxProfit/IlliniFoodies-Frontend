@@ -271,7 +271,7 @@ class SearchPage extends React.Component {
 
       var similarResultCarousel = [];
       var similarResultSlide = [];
-      response.data.forEach((element, index) => {
+      response.data.sort((a,b)=>{return b.AvgRating - a.AvgRating}).forEach((element, index) => {
         similarResultSlide.push(
           <InfoCard
               key={"search-similar-"+index}

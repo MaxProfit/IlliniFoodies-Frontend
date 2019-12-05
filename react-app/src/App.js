@@ -18,9 +18,9 @@ import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Slider from "@material-ui/core/Slider";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
 
 class App extends React.Component {
   constructor(props) {
@@ -52,6 +52,7 @@ class App extends React.Component {
     this.editSettings = this.editSettings.bind(this);
     this.saveSettingsChanges = this.saveSettingsChanges.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
+
     this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(this);
 
     this.handleSettingsNicknameChange = this.handleSettingsNicknameChange.bind(
@@ -104,7 +105,7 @@ class App extends React.Component {
   getRatings(userId) {
     var url = "https://api.illinifoodies.xyz/ratings";
     if (url !== null) {
-      url += ("/loggedin/" + userId);
+      url += "/loggedin/" + userId;
     }
     axiosRequest({
       type: "get",
@@ -159,7 +160,7 @@ class App extends React.Component {
       return (
         <li key="login" className="nav-item nav-link">
           <a
-            className="btn text-white"
+            className="btn text-white mt-2"
             href="https://auth.illinifoodies.xyz/login?response_type=token&client_id=2h8u013ovbmseaaurir8981hcs&redirect_uri=https://illinifoodies.xyz/signin"
             style={{
               backgroundImage: "linear-gradient(to top right, #00b4db, #0083b0)"
@@ -178,7 +179,7 @@ class App extends React.Component {
           <Dropdown>
             <Dropdown.Toggle variant="dark">
               <img
-                className="navbar-image rounded-circle thumbnail mr-1"
+                className="profile-image rounded-circle thumbnail mr-1"
                 src={this.state.user.Picture}
                 alt="Your profile"
               ></img>
@@ -262,15 +263,19 @@ class App extends React.Component {
 
     axiosRequest({
       type: "put",
-      url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following/" + anotherUserID,
+      url:
+        "https://api.illinifoodies.xyz/users/" +
+        this.state.user.Id +
+        "/following/" +
+        anotherUserID,
       onSuccess: response => {
         // this.setState({ user: updatedUser });
-        
         var following = this.state.following;
         following.push(anotherUserID);
         this.setState({
           following: following
-        })
+        });
+
         // callback to update user blurb UI
         userBlurbCallback();
 
@@ -365,13 +370,24 @@ class App extends React.Component {
       url: "https://api.illinifoodies.xyz/user/" + this.state.user.Id,
       data: updatedUser,
       onSuccess: response => {
+        let picture = updatedUser.Picture;
+        // add a default image if an invalid image was entered
+        if (
+          !picture.endsWith("png") &&
+          !picture.endsWith("jpg") &&
+          !picture.endsWith("jpeg")
+        ) {
+          updatedUser.Picture = "https://i.imgur.com/Om2NJm1.jpg?1"; // default uiuc image
+        }
+
         this.setState({ user: updatedUser, settingsSnackbarOpenAdd: true });
       }
     });
   }
 
-  handleSettingsSnackbarClose(){
-    this.setState({settingsSnackbarOpenAdd: false});
+
+  handleSettingsSnackbarClose() {
+    this.setState({ settingsSnackbarOpenAdd: false });
   }
 
   render() {
@@ -381,7 +397,7 @@ class App extends React.Component {
         <Link
           key={name + "-link"}
           to={"/" + name}
-          className="nav-item nav-link text-white mt-2"
+          className="nav-item nav-link text-white mt-3"
         >
           {name}
         </Link>
@@ -546,33 +562,33 @@ class App extends React.Component {
 
     return (
       <div className="App">
-      <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.settingsSnackbarOpenAdd}
-            autoHideDuration={6000}
-            onClose={this.handleSettingsSnackbarClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={<span id="message-id">Updated settings!</span>}
-            action={[
-              <IconButton
-                key="close"
-                aria-label="close"
-                color="inherit"
-                onClick={this.handleSettingsSnackbarClose}
-              >
-                <CloseIcon />
-              </IconButton>
-            ]}
-          />
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={this.state.settingsSnackbarOpenAdd}
+          autoHideDuration={6000}
+          onClose={this.handleSettingsSnackbarClose}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">Updated settings!</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="close"
+              color="inherit"
+              onClick={this.handleSettingsSnackbarClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
 
         <Router>
           <div className="fixed-top">
-            <Navbar bg="dark" expand="sm" className="bg-dark fixed-top pt-3">
+            <Navbar bg="dark" expand="sm" className="bg-dark fixed-top">
               <Navbar.Brand className="mr-auto">
                 <Link to="/" className="btn-link homepage-link">
                   <div className="d-flex flex-row">
