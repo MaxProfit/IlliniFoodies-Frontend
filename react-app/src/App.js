@@ -97,6 +97,7 @@ class App extends React.Component {
   }
 
   signIn(userId) {
+    console.log("in signin")
     console.log(userId);
     // set the user state variable (this function is called through the signup page)
     axiosRequest({
@@ -250,8 +251,6 @@ class App extends React.Component {
       url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following",
       data: {},
       onSuccess: response => {
-        console.log("in refresh following");
-          console.log(response);
         this.setState({
           following: response.data.Responses.IlliniFoodiesUserTable
         });
