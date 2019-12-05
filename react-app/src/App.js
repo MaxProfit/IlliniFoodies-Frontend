@@ -52,9 +52,8 @@ class App extends React.Component {
     this.editSettings = this.editSettings.bind(this);
     this.saveSettingsChanges = this.saveSettingsChanges.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
-    this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(
-      this
-    );
+
+    this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(this);
 
     this.handleSettingsNicknameChange = this.handleSettingsNicknameChange.bind(
       this
@@ -271,12 +270,12 @@ class App extends React.Component {
         anotherUserID,
       onSuccess: response => {
         // this.setState({ user: updatedUser });
-
         var following = this.state.following;
         following.push(anotherUserID);
         this.setState({
           following: following
         });
+
         // callback to update user blurb UI
         userBlurbCallback();
 
@@ -380,10 +379,12 @@ class App extends React.Component {
         ) {
           updatedUser.Picture = "https://i.imgur.com/Om2NJm1.jpg?1"; // default uiuc image
         }
+
         this.setState({ user: updatedUser, settingsSnackbarOpenAdd: true });
       }
     });
   }
+
 
   handleSettingsSnackbarClose() {
     this.setState({ settingsSnackbarOpenAdd: false });
