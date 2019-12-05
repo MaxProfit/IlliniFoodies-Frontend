@@ -32,7 +32,8 @@ class App extends React.Component {
       userSearchResults: [],
       showFollows: true, // relevant to whether we should show follows or search results in the friends modal
       favRestaurants: [],
-      recommendList: []
+      recommendList: [],
+      ratingList: []
     };
 
     this.signIn = this.signIn.bind(this);
@@ -50,6 +51,7 @@ class App extends React.Component {
     this.follow = this.follow.bind(this);
     this.getFavRestaurant = this.getFavRestaurant.bind(this);
     this.getRecommendation = this.getRecommendation.bind(this);
+    this.getRatings = this.getRatings.bind(this);
   }
 
   getFavRestaurant(userId) {
@@ -75,6 +77,20 @@ class App extends React.Component {
         if (response.data !== undefined) {
           // console.log(response);
           this.setState({recommendList : response.data });
+        }
+      }
+    });
+  }
+
+  getRatings(userId) {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/ratings",
+      data: {},
+      onSuccess: response => {
+        if (response.data !== undefined) {
+          // console.log(response);
+          this.setState({ratingList : response.data });
         }
       }
     });
@@ -264,6 +280,13 @@ class App extends React.Component {
         }
       });
     }
+
+    if (this.state.user === null) {
+      this.getRecommendation(null);
+      this.getRatings(null);
+    } else {
+
+    }
   }
 
   render() {
@@ -420,11 +443,15 @@ class App extends React.Component {
           <Route exact path="/" component={() => <HomePage 
                                                     favRestaurants={this.state.favRestaurants} 
                                                     user={this.state.user} 
-                                                    recommendList={this.state.recommendList} />} />
+                                                    recommendList={this.state.recommendList}
+                                                    ratingList={this.state.ratingList}
+                                                  />} />
           <Route path="/home" component={() => <HomePage 
                                                     favRestaurants={this.state.favRestaurants} 
                                                     user={this.state.user} 
-                                                    recommendList={this.state.recommendList} />} />
+                                                    recommendList={this.state.recommendList}
+                                                    ratingList={this.state.ratingList}
+                                                />} />
           <Route path="/about" component={AboutPage} />
           <Route
             path="/signin"
