@@ -10,7 +10,6 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import HomePage from "./HomePage";
 import AboutPage from "./AboutPage";
-import DemoPage from "./DemoPage";
 import SignUp from "./SignUp";
 
 import { axiosRequest, setCookie, getCookie } from "./Util";
@@ -25,7 +24,7 @@ class App extends React.Component {
     this.state = {
       user: null, // the current user's info
       following: [], // contains user objects for the users that the current user is following, not just ids
-      links: ["Home", "About", "Demo"], // non user-specific navbar links
+      links: ["Home", "About"], // non user-specific navbar links
       showFriendsModal: false,
       showFavoritesModal: false,
       showSettingsModal: false,
@@ -56,7 +55,7 @@ class App extends React.Component {
   getFavRestaurant(userId) {
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/user/" + userId+"/favorites",
+      url: "https://api.illinifoodies.xyz/users/" + userId + "/favorites",
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
@@ -82,6 +81,7 @@ class App extends React.Component {
   }
 
   signIn(userId) {
+    console.log(userId);
     // set the user state variable (this function is called through the signup page)
     axiosRequest({
       type: "get",
@@ -231,9 +231,11 @@ class App extends React.Component {
   refreshFollowing() {
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/user/following/" + this.state.user.Id,
+      url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following",
       data: {},
       onSuccess: response => {
+        console.log("in refresh following");
+          console.log(response);
         this.setState({
           following: response.data.Responses.IlliniFoodiesUserTable
         });
@@ -246,6 +248,20 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/users/many",
+      data: {
+        "userIds": [
+          "Google_108922586829281074505",
+          "Google_117881806940169210883"
+        ]
+      },
+      onSuccess: response => {
+        console.log("IN MANY");
+        console.log(response)
+      }
+    });
     let userid = getCookie("userid");
     if (userid !== "") {
       axiosRequest({
@@ -424,7 +440,6 @@ class App extends React.Component {
                                                     user={this.state.user} 
                                                     recommendList={this.state.recommendList} />} />
           <Route path="/about" component={AboutPage} />
-          <Route path="/demo" component={DemoPage} />
           <Route
             path="/signin"
             component={() => <SignUp signIn={this.signIn}></SignUp>}
