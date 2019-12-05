@@ -18,11 +18,13 @@ import Rating from "./Rating";
 
 class Feed extends React.Component {
   render() {
-    console.log(this.props.rating);
+    var res = this.props.rating.DatePosted.split("T");
+    var date = res[0].split("-")
+
     return (
       <div className={"feed-wrapper d-flex" + (this.props.side === "left" ? " left-wrapper" : " right-wrapper")}>
         <div className="user-img-wrapper">
-          <img src="https://s3-media3.fl.yelpcdn.com/bphoto/s6neDI4X_Pnn5ZSohVWWNA/o.jpg" alt="User profile image" />
+          <img src={this.props.rating.PictureURL} alt="User profile image" />
         </div>
         <div className={"feed-content-wrapper d-flex flex-column flex-grow-1" + (this.props.side === "left" ? " left-side" : " right-side")}>
           <h4 className="feed-restaurant d-flex justify-content-start">{this.props.rating.RestaurantName}</h4>
@@ -36,7 +38,8 @@ class Feed extends React.Component {
           <div className="d-flex justify-content-end">
             <FontAwesomeIcon icon={faQuoteRight} className={"quote-right-icon" + (this.props.side === "right" ? "2" : "")} />
           </div>
-    <div className="feed-user d-flex justify-content-end mt-4">{this.props.rating.Nickname}</div>
+          <div className="feed-user d-flex justify-content-end mt-4">{this.props.rating.Nickname}</div>
+          <div className="feed-date d-flex justify-content-end">{date[1]+"/"+ date[2] +"/" +date[0] + " " + res[1].substring(0,5)}</div>
         </div>
       </div>
     )
@@ -47,7 +50,7 @@ class FeedPage extends React.Component {
   
   render() {
     var feedComponent = [];
-    this.props.ratingList.forEach((element, index) => {
+    this.props.ratingList.reverse().forEach((element, index) => {
       if (index % 2 === 0) {
         feedComponent.push(
           <div className="row" key={"row-"+index}>
