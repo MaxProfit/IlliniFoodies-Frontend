@@ -227,29 +227,43 @@ class App extends React.Component {
   follow(anotherUserID, userBlurbCallback) {
     // create a copy of the following array since we don't want to
     // update the state unless the server update goes through
-    let followingCopy = this.state.user.Following.slice(
-      0,
-      this.state.user.Following.length
-    );
-    followingCopy.push(anotherUserID);
+    // let followingCopy = this.state.user.Following.slice(
+    //   0,
+    //   this.state.user.Following.length
+    // );
+    // followingCopy.push(anotherUserID);
 
-    // updated user data
-    let updatedUser = {
-      Id: this.state.user.Id,
-      PriceMin: this.state.user.PriceMin,
-      PriceMax: this.state.user.PriceMax,
-      Nickname: this.state.user.Nickname,
-      Picture: this.state.user.Picture,
-      Following: followingCopy, // only this has changed
-      FavoriteRestaurants: this.state.user.FavoriteRestaurants,
-    };
+    // // updated user data
+    // let updatedUser = {
+    //   Id: this.state.user.Id,
+    //   PriceMin: this.state.user.PriceMin,
+    //   PriceMax: this.state.user.PriceMax,
+    //   Nickname: this.state.user.Nickname,
+    //   Picture: this.state.user.Picture,
+    //   Following: followingCopy, // only this has changed
+    //   FavoriteRestaurants: this.state.user.FavoriteRestaurants,
+    // };
+
+    // axiosRequest({
+    //   type: "put",
+    //   url: "https://api.illinifoodies.xyz/user/" + this.state.user.Id,
+    //   data: updatedUser,
+    //   onSuccess: response => {
+    //     this.setState({ user: updatedUser });
+
+    //     // callback to update user blurb UI
+    //     userBlurbCallback();
+
+    //     // update the array of users that the current user is following
+    //     this.refreshFollowing();
+    //   }
+    // });
 
     axiosRequest({
       type: "put",
-      url: "https://api.illinifoodies.xyz/user/" + this.state.user.Id,
-      data: updatedUser,
+      url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following/" + anotherUserID,
       onSuccess: response => {
-        this.setState({ user: updatedUser });
+        // this.setState({ user: updatedUser });
 
         // callback to update user blurb UI
         userBlurbCallback();

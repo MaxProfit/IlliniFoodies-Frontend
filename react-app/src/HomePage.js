@@ -645,7 +645,7 @@ class HomePage extends React.Component {
 
           { this.state.active === "follow" && 
             <div className="text-center">
-              <h2 className="page-head">- Your Feeds -</h2>
+              <h2 className="page-head">- Your Feed -</h2>
               <FeedPage ratingList={this.props.ratingList} />
             </div>
           }
