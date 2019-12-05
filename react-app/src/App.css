@@ -2,6 +2,10 @@
   max-height: 30px;
 }
 
+body {
+  background-color: #11111150;
+}
+
 .foodie-header {
   background-image: url("./images/foodie-header.jpg");
   width: 100%;
@@ -23,6 +27,10 @@
   color: white;
   font-size: 11em;
   margin-bottom: 0.5em;
+}
+
+.homepage-link {
+  text-decoration: none;
 }
 
 .card {
@@ -94,6 +102,50 @@
   filter: brightness(50%);
 }
 
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border: white solid 0.1rem;
+  border-radius: 1.25rem;
+
+  width: 70%;
+  height: 400px;
+
+  margin-top: 5rem;
+  margin-right: 0rem;
+
+  z-index: 6;
+}
+
+.signup-form input {
+  width: 50%;
+  margin-top: 1rem;
+
+  border-bottom: white solid 0.1rem;
+  border-left: none;
+  border-right: none;
+  border-top: none; 
+  border-radius: 0rem;
+
+  background: transparent;
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+
+  z-index: 3;
+}
+
+.signup-form input:focus {
+  box-shadow: none;
+  border-color: white; 
+
+  background: transparent;
+  color: white;
+}
+
 @media (min-width: 576px) {
   .custom-jumbotron {
     padding: 4rem 2rem;
@@ -102,4 +154,8 @@
 
 form input{
   margin-bottom: 0.5em;
+}
+
+.navbar-yellow {
+  opacity: 0.6;
 }

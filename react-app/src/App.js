@@ -10,7 +10,6 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import HomePage from "./HomePage";
 import AboutPage from "./AboutPage";
-import DemoPage from "./DemoPage";
 import SignUp from "./SignUp";
 
 import { axiosRequest, setCookie, getCookie } from "./Util";
@@ -25,13 +24,15 @@ class App extends React.Component {
     this.state = {
       user: null, // the current user's info
       following: [], // contains user objects for the users that the current user is following, not just ids
-      links: ["Home", "About", "Demo"], // non user-specific navbar links
+      links: ["Home", "About"], // non user-specific navbar links
       showFriendsModal: false,
       showFavoritesModal: false,
       showSettingsModal: false,
       userSearch: "", // relevant to user search in the friends modal
       userSearchResults: [],
-      showFollows: true // relevant to whether we should show follows or search results in the friends modal
+      showFollows: true, // relevant to whether we should show follows or search results in the friends modal
+      favRestaurants: [],
+      recommendList: []
     };
 
     this.signIn = this.signIn.bind(this);
@@ -47,9 +48,40 @@ class App extends React.Component {
     this.refreshFollowing = this.refreshFollowing.bind(this);
     this.searchUsers = this.searchUsers.bind(this);
     this.follow = this.follow.bind(this);
+    this.getFavRestaurant = this.getFavRestaurant.bind(this);
+    this.getRecommendation = this.getRecommendation.bind(this);
+  }
+
+  getFavRestaurant(userId) {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/users/" + userId + "/favorites",
+      data: {},
+      onSuccess: response => {
+        if (response.data !== undefined) {
+          // console.log(response.data);
+          this.setState({favRestaurants : response.data });
+        }
+      }
+    });
+  }
+
+  getRecommendation(userId) {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/restaurants/recommendations",
+      data: {},
+      onSuccess: response => {
+        if (response.data !== undefined) {
+          // console.log(response);
+          this.setState({recommendList : response.data });
+        }
+      }
+    });
   }
 
   signIn(userId) {
+    console.log(userId);
     // set the user state variable (this function is called through the signup page)
     axiosRequest({
       type: "get",
@@ -199,9 +231,11 @@ class App extends React.Component {
   refreshFollowing() {
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/user/following/" + this.state.user.Id,
+      url: "https://api.illinifoodies.xyz/users/" + this.state.user.Id + "/following",
       data: {},
       onSuccess: response => {
+        console.log("in refresh following");
+          console.log(response);
         this.setState({
           following: response.data.Responses.IlliniFoodiesUserTable
         });
@@ -214,6 +248,20 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/users/many",
+      data: {
+        "userIds": [
+          "Google_108922586829281074505",
+          "Google_117881806940169210883"
+        ]
+      },
+      onSuccess: response => {
+        console.log("IN MANY");
+        console.log(response)
+      }
+    });
     let userid = getCookie("userid");
     if (userid !== "") {
       axiosRequest({
@@ -224,6 +272,8 @@ class App extends React.Component {
           if (response.data.Item !== undefined) {
             this.setState({ user: response.data.Item });
             this.refreshFollowing();
+            this.getFavRestaurant(userid);
+            this.getRecommendation(userid);
           }
         }
       });
@@ -355,7 +405,7 @@ class App extends React.Component {
           <div className="fixed-top">
             <Navbar bg="dark" expand="sm" className="bg-dark fixed-top pt-3">
               <Navbar.Brand className="mr-auto">
-                <Link to="/" className="btn-link">
+                <Link to="/" className="btn-link homepage-link">
                   <div className="d-flex flex-row">
                     <img
                       className="navbar-image mr-3 ml-2 mt-1"
@@ -376,15 +426,20 @@ class App extends React.Component {
               </Navbar.Collapse>
             </Navbar>
             <div
-              className="navbar-sunkist mt-5 pt-5"
+              className="navbar-sunkist mt-5 pt-5 navbar-yellow"
               style={{ height: "5px" }}
             ></div>
           </div>
 
-          <Route exact path="/" component={HomePage} />
-          <Route path="/home" component={HomePage} />
+          <Route exact path="/" component={() => <HomePage 
+                                                    favRestaurants={this.state.favRestaurants} 
+                                                    user={this.state.user} 
+                                                    recommendList={this.state.recommendList} />} />
+          <Route path="/home" component={() => <HomePage 
+                                                    favRestaurants={this.state.favRestaurants} 
+                                                    user={this.state.user} 
+                                                    recommendList={this.state.recommendList} />} />
           <Route path="/about" component={AboutPage} />
-          <Route path="/demo" component={DemoPage} />
           <Route
             path="/signin"
             component={() => <SignUp signIn={this.signIn}></SignUp>}

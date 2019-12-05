@@ -1,9 +1,12 @@
 // NEW USER SIGN UP PAGE
 import React from "react";
 import Slider from "@material-ui/core/Slider";
+import TextField from "@material-ui/core/TextField";
 import { axiosRequest, setCookie } from "./Util";
+import "./SignUp.scss";
 
 const jwt = require("jsonwebtoken");
+
 class SignUp extends React.Component {
   constructor(props) {
     super(props);
@@ -50,7 +53,7 @@ class SignUp extends React.Component {
         decodedToken.payload["cognito:username"],
       data: {},
       onSuccess: response => {
-        if (response.data.Item !== undefined) {
+        if (response.data.PriceMin !== undefined) {
           this.props.signIn(decodedToken.payload["cognito:username"]);
         }
       }
@@ -143,9 +146,9 @@ class SignUp extends React.Component {
           question="How much are you willing to spend on food?"
           tip="Read: Rate yourself on a scale from broke to not broke"
           customInput={
-            <div>
+            <div className="d-flex flex-column align-items-center">
               <Slider
-                className="mt-5"
+                className="mt-5 custom-slider" 
                 onChange={this.handlePriceRangeChange}
                 defaultValue={this.defaultPriceRange}
                 aria-labelledby="range-slider"
@@ -156,7 +159,7 @@ class SignUp extends React.Component {
                 max={30}
               />
               <button
-                className="btn btn-dark mt-4 w-25"
+                className="btn btn-outline-light mt-5 w-50"
                 type="submit"
                 onClick={this.submitUserSetup}
               >
@@ -176,8 +179,9 @@ class SignUp extends React.Component {
     }
 
     return (
-      <div className="bg-dark" style={{ height: "900px" }}>
-        <div className="container mt-5 pt-5">{form}</div>
+      <div className="signup-header">
+        <div className="overlay-signup"></div>
+        {form}
       </div>
     );
   }
@@ -188,15 +192,16 @@ class CustomForm extends React.Component {
     if (this.props.inputOnChange !== undefined) {
       var interactiveInput = (
         <input
-          className="form-control mt-5 pt-2 w-75"
+          className="form-control"
+          label={this.props.inputPlaceholder}
           onChange={this.props.inputOnChange}
           onKeyPress={event => {
             if (event.key === "Enter") {
               this.props.inputOnEnter();
             }
           }}
-          placeholder={this.props.inputPlaceholder}
           key={this.props.key}
+          autofocus
         />
       );
     } else {
@@ -204,17 +209,11 @@ class CustomForm extends React.Component {
     }
 
     return (
-      <form
-        className="d-flex flex-column justify-content-center align-items-center text-white rounded"
-        style={{
-          backgroundImage: "linear-gradient(to top left, #00b4db, #0083b0)",
-          height: "600px"
-        }}
-      >
+      <form className="signup-form text-white">
         <h1>{this.props.question}</h1>
-        <p>
+        <h5>
           <i>{this.props.tip}</i>
-        </p>
+        </h5>
         {interactiveInput}
       </form>
     );

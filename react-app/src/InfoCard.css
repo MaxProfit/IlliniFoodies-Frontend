@@ -1,0 +1,47 @@
+.restaurant-card {
+    display: flex;
+    flex-direction: column;
+
+    width: 350px;
+    height: 500px;
+    border-radius: 1.25rem;
+    
+    background: rgba(255, 255, 255, 0.644);
+    filter: none;
+    
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.restaurant-card img {
+    height: 300px;
+    object-fit: cover;
+
+    border-top-left-radius: 1.21rem;
+    border-top-right-radius: 1.21rem;
+}
+
+.heart-btn:focus, .edit-btn:focus, .delete-btn:focus, .done-btn:focus {
+    outline: none;
+}
+
+
+.review-wrapper {
+    width: 350px;
+    height: 300px;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    border-top-left-radius: 1.21rem;
+    border-top-right-radius: 1.21rem;
+}
+
+.write-review {
+    width: 280px;
+    height: 230px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 4px;
+}
+
+.review-input {
+    width: 230px;
+}
