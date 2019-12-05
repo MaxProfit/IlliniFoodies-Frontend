@@ -25,11 +25,13 @@ export const InfoCard = class InfoCard extends React.Component {
       comment: "",
       openAdd: false,
       openRemove: false,
-      openLogin: false
+      openLogin: false,
+      openReview: false
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleClose2 = this.handleClose2.bind(this);
     this.handleClose3 = this.handleClose3.bind(this);
+    this.handleClose4 = this.handleClose4.bind(this);
   }
 
   handleClose() {
@@ -47,6 +49,12 @@ export const InfoCard = class InfoCard extends React.Component {
   handleClose3() {
     this.setState({
       openLogin: false
+    })
+  }
+
+  handleClose4() {
+    this.setState({
+      openReview: false
     })
   }
 
@@ -83,7 +91,10 @@ export const InfoCard = class InfoCard extends React.Component {
         onSuccess: response => {
           if (response.status === 200) {
             // console.log(response.data);
-            this.setState({ review: false });
+            this.setState({
+              review: false,
+              openReview: true
+            });
           }
         }
       });
@@ -224,6 +235,30 @@ export const InfoCard = class InfoCard extends React.Component {
                 aria-label="close"
                 color="inherit"
                 onClick={this.handleClose3}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.openReview}
+            autoHideDuration={6000}
+            onClose={this.handleClose4}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Review Subitted</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="close"
+                color="inherit"
+                onClick={this.handleClose4}
               >
                 <CloseIcon />
               </IconButton>
