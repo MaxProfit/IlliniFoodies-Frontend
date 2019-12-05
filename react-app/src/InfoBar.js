@@ -52,7 +52,7 @@ class InfoBar extends React.Component {
 
     return (
       <div className="container text-center">
-        <h3 className="pt-4 mb-4 text-white">{this.props.title}</h3>
+        {/* <h3 className="pt-4 mb-4 text-white">{this.props.title}</h3> */}
         <div className="d-flex flex-row flex-wrap align-items-center">{cards}</div>
       </div>
     );

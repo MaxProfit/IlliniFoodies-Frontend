@@ -3,7 +3,7 @@ import InfoBar from "./InfoBar";
 import './HomePage.scss';
 import Typist from 'react-typist';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faHeart, faUsers, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faHeart, faUsers, faSearch, faQuoteLeft, faQuoteRight, faChevronCircleLeft, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import parse from 'autosuggest-highlight/parse';
@@ -13,15 +13,64 @@ import Typography from '@material-ui/core/Typography';
 import { axiosRequest } from "./Util";
 import SearchIcon from '@material-ui/icons/Search';
 import Fab from '@material-ui/core/Fab';
+import { InfoCard } from "./InfoCard";
+import Rating from "./Rating";
 
-class FeedPae extends React.Component {
+class Feed extends React.Component {
+  render() {
+    return (
+      <div className={"feed-wrapper d-flex" + (this.props.side === "left" ? " left-wrapper" : " right-wrapper")}>
+        <div className="user-img-wrapper">
+          <img src="https://s3-media3.fl.yelpcdn.com/bphoto/s6neDI4X_Pnn5ZSohVWWNA/o.jpg" alt="User profile image" />
+        </div>
+        <div className={"feed-content-wrapper d-flex flex-column flex-grow-1" + (this.props.side === "left" ? " left-side" : " right-side")}>
+          <h4 className="feed-restaurant d-flex justify-content-start">Craving</h4>
+          <div className="feed-rating d-flex justify-content-start mb-3">
+            <Rating rating={5}></Rating>
+          </div>
+          <div className="feed-comment d-flex justify-content-start">
+            <FontAwesomeIcon icon={faQuoteLeft} className={"quote-left-icon" + (this.props.side === "right" ? "2" : "")} />
+            <span className="feed-text">"This is gud stuff. lah lah la alalala aha </span>
+          </div>
+          <div className="d-flex justify-content-end">
+            <FontAwesomeIcon icon={faQuoteRight} className={"quote-right-icon" + (this.props.side === "right" ? "2" : "")} />
+          </div>
+          <div className="feed-user d-flex justify-content-end mt-4">― Me and You</div>
+        </div>
+      </div>
+    )
+  }
+}
+
+class FeedPage extends React.Component {
   render() {
     return (
       <div className="feed-page">
-        <div className="d-flex head-wrapper">
+        {/* <div className="d-flex head-wrapper">
         </div>
-        
-        
+         */}
+         <div className="container mt-5">
+          <div className="row">
+            <div className="col">
+              
+              <Feed side="left" />
+            </div>
+            <div className="col">
+
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              
+            </div>
+            <div className="col">
+              
+              <Feed side="right" />
+            </div>
+          </div>
+         </div>
+         
       </div>
     )
   }
@@ -37,7 +86,12 @@ class SearchPage extends React.Component {
       restaurantName: [],
       tagsList: [],
       nameInput: "",
-      tagInput: []
+      tagInput: [],
+      searchResult: [],
+      similarResult: [],
+      searchComponent: [],
+      similarComponent: [],
+      noResult: false
     }
 
     
@@ -62,7 +116,6 @@ class SearchPage extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.status === 200) {
-          // console.log(response.data.body);
           this.setState({ tagsList: response.data.body });
         }
       }
@@ -70,38 +123,221 @@ class SearchPage extends React.Component {
   }
 
   handleSearch() {
-    console.log("min price", this.state.minPrice);
-    console.log("max price", this.state.maxPrice);
-    console.log("min rating", this.state.minRating);
-    console.log("name", this.state.nameInput);
-    console.log("tags", this.state.tagInput);
+    this.setState({
+      searchComponent: [],
+      searchResult: [],
+      similarResult: [],
+      similarComponent: [],
+      noResult: false
+    });
+
     var tagInputString = this.state.tagInput.join(",")
 
     const axios = require('axios').default;
+    var self = this;
+
     axios.get('https://api.illinifoodies.xyz/restaurants/search', {
       params: {
         minprice: this.state.minPrice,
         maxprice: this.state.maxPrice,
         minrating: this.state.minRating,
         restaurantname: this.state.nameInput,
-        tags: tagInputString
+        tags: tagInputString,
+        limit: 21
       }
     })
     .then(function (response) {
-      console.log(response);
+      self.setState({
+        searchResult: response.data
+      })
+
+      if (response.data.length === 0) {
+        self.setState({
+          noResult: true
+        })
+      }
+
+      var searchResultCarousel = [];
+      var searchResultSlide = [];
+      response.data.forEach((element, index) => {
+        searchResultSlide.push(
+          <InfoCard
+              key={"search-result-"+index}
+              imageSrc={element.PictureURL}
+              title={element.RestaurantName}
+              titleLink={element.WebsiteURL}
+              text={<Rating rating={element.AvgRating}></Rating>}
+              like={false}
+              restaurantId={element.RestaurantId}
+              tags={element.Tags}
+              user={self.props.user}
+              unique={"search-result-"+index}
+            ></InfoCard>
+        );
+        
+        if ((index + 1) % 3 === 0) {
+          if (index == 2) {
+            searchResultCarousel.push(
+              <div className="carousel-item active" key={"carousel" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { searchResultSlide }
+                </div>
+              </div>
+            )
+          } else {
+            searchResultCarousel.push(
+              <div className="carousel-item" key={"carousel" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { searchResultSlide }
+                </div>
+              </div>
+            )
+          }
+          
+          searchResultSlide = [];
+        }
+
+      })
+
+      if (searchResultSlide.length !== 0) {
+        if (response.data.length < 3) {
+          searchResultCarousel.push(
+            <div className="carousel-item active" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { searchResultSlide }
+              </div>
+            </div>
+          )
+        } else {
+          searchResultCarousel.push(
+            <div className="carousel-item" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { searchResultSlide }
+              </div>
+            </div>
+          )
+        }
+      }
+      self.setState({
+        searchComponent: searchResultCarousel
+      })
     })
     .catch(function (error) {
       console.log(error);
     })
     .finally(function () {
       // always executed
-    });  
+    });
+    
+    
+
+
+
+
+
+
+    axios.get('https://api.illinifoodies.xyz/restaurants/similar', {
+      params: {
+        minprice: this.state.minPrice,
+        maxprice: this.state.maxPrice,
+        minrating: this.state.minRating,
+        restaurantname: this.state.nameInput,
+        tags: tagInputString,
+        limit: 21
+      }
+    })
+    .then(function (response) {
+      console.log("tags", tagInputString);
+      console.log("similar", response.data);
+      self.setState({
+        similarResult: response.data
+      })
+
+      var similarResultCarousel = [];
+      var similarResultSlide = [];
+      response.data.forEach((element, index) => {
+        similarResultSlide.push(
+          <InfoCard
+              key={"search-similar-"+index}
+              imageSrc={element.PictureURL}
+              title={element.RestaurantName}
+              titleLink={element.WebsiteURL}
+              text={<Rating rating={element.AvgRating}></Rating>}
+              like={false}
+              restaurantId={element.RestaurantId}
+              tags={element.Tags}
+              user={self.props.user}
+              unique={"search-similar-"+index}
+            ></InfoCard>
+        );
+        
+        if ((index + 1) % 3 === 0) {
+          if (index == 2) {
+            similarResultCarousel.push(
+              <div className="carousel-item active" key={"carousel2" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { similarResultSlide }
+                </div>
+              </div>
+            )
+          } else {
+            similarResultCarousel.push(
+              <div className="carousel-item" key={"carousel2" + index}>
+                <div className="d-flex justify-content-center flex-row flex-wrap align-items-center">
+                  { similarResultSlide }
+                </div>
+              </div>
+            )
+          }
+          
+          similarResultSlide = [];
+        }
+
+      })
+
+      if (similarResultSlide.length !== 0) {
+        if (response.data.length < 3) {
+          similarResultCarousel.push(
+            <div className="carousel-item active" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { similarResultSlide }
+              </div>
+            </div>
+          )
+        } else {
+          similarResultCarousel.push(
+            <div className="carousel-item" key={"carousel-" + 1}>
+              <div className="d-flex justify-content-center">
+                
+                { similarResultSlide }
+              </div>
+            </div>
+          )
+        }
+      }
+      self.setState({
+        similarComponent: similarResultCarousel
+      })
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .finally(function () {
+      // always executed
+    });
+
   }
   
-
+  
   render() {
+   
+
     return (
       <div className="search-page">
+        
         <div className="search-form">
           
           <div className="container mt-5">
@@ -131,8 +367,7 @@ class SearchPage extends React.Component {
                           })
                           // console.log(event.target.value);
                         }}
-
-                         />
+                     />
                   )}
                   renderOption={(option, { inputValue }) => {
                     const matches = match(option, inputValue);
@@ -141,7 +376,7 @@ class SearchPage extends React.Component {
                     return (
                       <div>
                         {parts.map((part, index) => (
-                          <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                          <span key={"part-"+index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
                             {part.text}
                           </span>
                         ))}
@@ -152,8 +387,6 @@ class SearchPage extends React.Component {
               </div>
 
               <div className="col">
-                
-
                 <Autocomplete
                   multiple
                   id="tags-outlined"
@@ -175,13 +408,11 @@ class SearchPage extends React.Component {
                       variant="outlined"
                       label="Tags"
                       margin="normal"
-                      fullWidth
-                      
+                      fullWidth         
                     />
                   )}
                 />
-              </div>
-              
+              </div>     
             </div>
 
             <div className="row mb-4">
@@ -232,8 +463,8 @@ class SearchPage extends React.Component {
                   />
               </div>
 
-              <div className="col">
-                <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) }>
+              <div className="col d-flex justify-content-end align-items-center mt-4">
+                <Fab variant="extended" className="search-btn" onClick={ this.handleSearch.bind(this) } id="search-btn">
                   <SearchIcon className="search-icon" />
                   <span className="search-txt">Search</span>
                 </Fab>
@@ -241,6 +472,62 @@ class SearchPage extends React.Component {
               </div>
           </div>
         
+          
+        </div>
+
+
+        <div className="search-result mb-5">
+          { (this.state.searchComponent.length !== 0 || this.state.noResult) && 
+            <h2 className="page-head2">- Search Results -</h2>
+          }
+
+          { this.state.noResult && 
+            <div className="no-result">
+              Sorry. We do not find the restaurant for you :(
+            </div>
+          }
+              
+          <div id="searchResultCarousel" className="carousel slide" data-interval="false">
+            <div className="carousel-inner">
+              { this.state.searchComponent }
+            </div>
+
+            { this.state.searchComponent.length !== 0 && 
+            <>
+              <a className="carousel-control-prev" href="#searchResultCarousel" role="button" data-slide="prev">
+                <FontAwesomeIcon icon={faChevronCircleLeft} className="left-right-icon" />
+              </a>
+              <a className="carousel-control-next" href="#searchResultCarousel" role="button" data-slide="next">
+                <FontAwesomeIcon icon={faChevronCircleRight} className="left-right-icon" />
+              </a>
+              </>
+            }
+            
+          </div>
+        </div>
+
+        <div className="similar-result">
+          { this.state.similarComponent.length !== 0 && 
+            <h2 className="page-head2">- Similar Restaurants -</h2>
+          }
+
+          <div id="similarResultCarousel" className="carousel slide" data-interval="false">
+            <div className="carousel-inner">
+              { this.state.similarComponent }
+            </div>
+
+            { this.state.similarComponent.length !== 0 && 
+            <>
+              <a className="carousel-control-prev" href="#similarResultCarousel" role="button" data-slide="prev">
+                <FontAwesomeIcon icon={faChevronCircleLeft} className="left-right-icon" />
+              </a>
+              <a className="carousel-control-next" href="#similarResultCarousel" role="button" data-slide="next">
+                <FontAwesomeIcon icon={faChevronCircleRight} className="left-right-icon" />
+              </a>
+              </>
+            }
+            
+          </div>
           
         </div>
       </div>
@@ -254,15 +541,17 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "search"
+      active: "home",
     }
   }
 
+  
   iconChange(iconName) {
     // console.log(iconName);
     this.setState({
       active: iconName
-    })
+    });
+    
   }
 
   render() {
@@ -320,8 +609,8 @@ class HomePage extends React.Component {
         <div className="content-wrapper">
           { this.state.active === "home" && 
 
-            <div>
-              
+            <div className="text-center">
+              <h2 className="page-head">- Top Picks For You -</h2>
               <InfoBar title="TOP PICKS NEAR YOU" 
                        page="home page" 
                        recommendList={this.props.recommendList} 
@@ -330,7 +619,8 @@ class HomePage extends React.Component {
           }
 
           { this.state.active === "like" && 
-            <div>
+            <div className="text-center">
+              <h2 className="page-head">- Your Favorites -</h2>
               <InfoBar title="Favorite Restaurants" 
                        page="like page" 
                        favRestaurants={this.props.favRestaurants} 
@@ -339,19 +629,21 @@ class HomePage extends React.Component {
           }
 
           { this.state.active === "follow" && 
-            <div>
-              <FeedPae />              
+            <div className="text-center">
+              <h2 className="page-head">- Your Feeds -</h2>
+              <FeedPage />              
             </div>
           }
 
           { this.state.active === "search" && 
-            <div>
-              <SearchPage />
+            <div className="text-center">
+              <h2 className="page-head">- Find A Restaurant -</h2>
+              <SearchPage user={this.props.user} />
             </div>
           }
         </div>
 
-
+        
       </div>
     );
   }
