@@ -55,7 +55,7 @@ class App extends React.Component {
   getFavRestaurant(userId) {
     axiosRequest({
       type: "get",
-      url: "https://api.illinifoodies.xyz/users/" + userId + "/favorites",
+      url: "https://api.illinifoodies.xyz/user/" + userId + "/favorites",
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
@@ -248,20 +248,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axiosRequest({
-      type: "get",
-      url: "https://api.illinifoodies.xyz/users/many",
-      data: {
-        "userIds": [
-          "Google_108922586829281074505",
-          "Google_117881806940169210883"
-        ]
-      },
-      onSuccess: response => {
-        console.log("IN MANY");
-        console.log(response)
-      }
-    });
     let userid = getCookie("userid");
     if (userid !== "") {
       axiosRequest({
