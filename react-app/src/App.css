@@ -2,10 +2,6 @@
   max-height: 30px;
 }
 
-body {
-  background-color: #11111150;
-}
-
 .foodie-header {
   background-image: url("./images/foodie-header.jpg");
   width: 100%;
