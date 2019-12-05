@@ -16,7 +16,6 @@ import Fab from '@material-ui/core/Fab';
 import { InfoCard } from "./InfoCard";
 import Rating from "./Rating";
 
-
 class Feed extends React.Component {
   render() {
     return (
@@ -542,15 +541,17 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: "follow"
+      active: "home",
     }
   }
 
+  
   iconChange(iconName) {
     // console.log(iconName);
     this.setState({
       active: iconName
-    })
+    });
+    
   }
 
   render() {
@@ -642,7 +643,7 @@ class HomePage extends React.Component {
           }
         </div>
 
-
+        
       </div>
     );
   }

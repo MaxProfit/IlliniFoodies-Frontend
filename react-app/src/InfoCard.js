@@ -9,6 +9,9 @@ import { Fade } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DoneIcon from '@material-ui/icons/Done';
 import Rating from '@material-ui/lab/Rating';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 export const InfoCard = class InfoCard extends React.Component {
   constructor(props) {
@@ -19,8 +22,24 @@ export const InfoCard = class InfoCard extends React.Component {
       like: this.props.like,
       review: false,
       rating: 0,
-      comment: ""
+      comment: "",
+      openAdd: false,
+      openRemove: false
     }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleClose2 = this.handleClose2.bind(this);
+  }
+
+  handleClose() {
+    this.setState({
+      openAdd: false
+    })
+  }
+
+  handleClose2() {
+    this.setState({
+      openRemove: false
+    })
   }
 
   submitReview() {
@@ -78,7 +97,10 @@ export const InfoCard = class InfoCard extends React.Component {
         onSuccess: response => {
           if (response.status === 200) {
             // console.log(response.data);
-            this.setState({ like: true });
+            this.setState({
+              like: true,
+              openAdd: true
+            });
           }
         }
       });
@@ -99,7 +121,10 @@ export const InfoCard = class InfoCard extends React.Component {
           if (response.status === 200) {
             // console.log(response.data);
             console.log(response);
-            this.setState({ like: false });
+            this.setState({
+              like: false,
+              openRemove: true
+            });
           }
         }
       });
@@ -117,6 +142,54 @@ export const InfoCard = class InfoCard extends React.Component {
       
       return (
         <div className="restaurant-card shadow">
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.openAdd}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Add To Favorites</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="close"
+                color="inherit"
+                onClick={this.handleClose}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.openRemove}
+            autoHideDuration={6000}
+            onClose={this.handleClose2}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Remove From Favorites</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="close"
+                color="inherit"
+                onClick={this.handleClose2}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+
           <img src={this.props.imageSrc}></img>
           <Fade in={this.state.review}>
             <div className="review-wrapper d-flex justify-content-center align-items-center">
