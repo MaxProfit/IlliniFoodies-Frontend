@@ -24,10 +24,12 @@ export const InfoCard = class InfoCard extends React.Component {
       rating: 0,
       comment: "",
       openAdd: false,
-      openRemove: false
+      openRemove: false,
+      openLogin: false
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleClose2 = this.handleClose2.bind(this);
+    this.handleClose3 = this.handleClose3.bind(this);
   }
 
   handleClose() {
@@ -39,6 +41,12 @@ export const InfoCard = class InfoCard extends React.Component {
   handleClose2() {
     this.setState({
       openRemove: false
+    })
+  }
+
+  handleClose3() {
+    this.setState({
+      openLogin: false
     })
   }
 
@@ -79,6 +87,10 @@ export const InfoCard = class InfoCard extends React.Component {
           }
         }
       });
+    } else {
+      this.setState({
+        openLogin: true
+      })
     }
   }
 
@@ -104,6 +116,10 @@ export const InfoCard = class InfoCard extends React.Component {
           }
         }
       });
+    } else {
+      this.setState({
+        openLogin: true
+      })
     }
     
   }
@@ -184,6 +200,30 @@ export const InfoCard = class InfoCard extends React.Component {
                 aria-label="close"
                 color="inherit"
                 onClick={this.handleClose2}
+              >
+                <CloseIcon />
+              </IconButton>
+            ]}
+          />
+
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.openLogin}
+            autoHideDuration={6000}
+            onClose={this.handleClose3}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Please Log In First</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="close"
+                color="inherit"
+                onClick={this.handleClose3}
               >
                 <CloseIcon />
               </IconButton>
