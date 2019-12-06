@@ -10,7 +10,6 @@ class InfoBar extends React.Component {
     if (this.props.page === "home page") {
       
       this.props.recommendList.forEach(((restaurant, index) => {
-        // console.log(restaurant.RestaurantId);
         var k = "like-" + index;
         cards.push(
           <InfoCard
@@ -24,6 +23,8 @@ class InfoBar extends React.Component {
             tags={restaurant.Tags}
             user={this.props.user}
             unique={k}
+            refreshFavorites={this.props.refreshFavorites}
+            refreshRatings={this.props.refreshRatings}
           ></InfoCard>
         );
       }));
@@ -43,6 +44,8 @@ class InfoBar extends React.Component {
             tags={restaurant.Tags}
             user={this.props.user}
             unique={k}
+            refreshFavorites={this.props.refreshFavorites}
+            refreshRatings={this.props.refreshRatings}
           ></InfoCard>
         );
       }));

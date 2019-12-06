@@ -81,7 +81,6 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
-          // console.log(response.data);
           this.setState({ favRestaurants: response.data });
         }
       }
@@ -95,7 +94,6 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
-          // console.log(response);
           this.setState({ recommendList: response.data });
         }
       }
@@ -113,7 +111,6 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         if (response.data !== undefined) {
-          // console.log(response);
           this.setState({ ratingList: response.data });
         }
       }
@@ -121,8 +118,6 @@ class App extends React.Component {
   }
 
   signIn(userId) {
-    console.log("in signin");
-    console.log(userId);
     // set the user state variable (this function is called through the signup page)
     axiosRequest({
       type: "get",
@@ -259,7 +254,6 @@ class App extends React.Component {
     //     this.refreshFollowing();
     //   }
     // });
-    var self = this;
 
     axiosRequest({
       type: "put",
@@ -308,6 +302,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // dummy sql query to turn on aws aurora sql db
+    axiosRequest({
+      type: "get",
+      url: "https://api.illinifoodies.xyz/ratings",
+      data: {},
+    });
+
     let userid = getCookie("userid");
     if (userid !== "") {
       axiosRequest({
@@ -520,13 +521,13 @@ class App extends React.Component {
               <p className="text-center text-help">
                 No users found ┐(￣ヘ￣;)┌
               </p>
-              <a
-                className="ml-auto"
-                href="#"
+              <button
+                className="ml-auto btn btn-link"
+                type="button"
                 onClick={() => this.setState({ showFollows: true })}
               >
                 back
-              </a>
+              </button>
             </div>
           );
         }
@@ -544,13 +545,13 @@ class App extends React.Component {
                     followable={true}
                     following={this.state.user.Following.includes(user.Id)}
                   ></UserBlurb>
-                  <a
-                    className="ml-auto"
-                    href="#"
+                  <button
+                    className="ml-auto btn btn-link"
+                    type="button"
                     onClick={() => this.setState({ showFollows: true })}
                   >
                     back
-                  </a>
+                  </button>
                 </div>
               );
             }
@@ -625,6 +626,8 @@ class App extends React.Component {
                 user={this.state.user}
                 recommendList={this.state.recommendList}
                 ratingList={this.state.ratingList}
+                refreshFavorites={this.getFavRestaurant}
+                refreshRatings={this.getRatings}
               />
             )}
           />
@@ -636,6 +639,8 @@ class App extends React.Component {
                 user={this.state.user}
                 recommendList={this.state.recommendList}
                 ratingList={this.state.ratingList}
+                refreshFavorites={this.getFavRestaurant}
+                refreshRatings={this.getRatings}
               />
             )}
           />
