@@ -4,7 +4,6 @@ import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
 import { axiosRequest, setCookie } from "./Util";
 import Stepper from "@material-ui/core/Stepper";
-import StepButton from "@material-ui/core/StepButton";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 
@@ -231,7 +230,7 @@ class CustomForm extends React.Component {
     }
 
     var button = <div></div>;
-    if (this.props.buttonText != undefined) {
+    if (this.props.buttonText !== undefined) {
       button = (
         <button
           className="btn btn-outline-light mt-5 w-50"
