@@ -22,6 +22,13 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
+import ReactGA from "react-ga";
+
+function initializeReactGA() {
+  ReactGA.initialize('UA-139124956-2');
+  ReactGA.pageview('/homepage');
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -280,6 +287,8 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         this.setState({ databaseIsNapping: false });
+
+        initializeReactGA(); // init google analytics
       },
       onFail: error => {
         this.setState({ databaseIsNapping: true });

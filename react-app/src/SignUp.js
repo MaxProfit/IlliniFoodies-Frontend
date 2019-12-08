@@ -7,6 +7,8 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 
+import ReactGA from "react-ga";
+
 const jwt = require("jsonwebtoken");
 
 class SignUp extends React.Component {
@@ -98,6 +100,11 @@ class SignUp extends React.Component {
       data: data,
       onSuccess: response => {
         this.props.signIn(this.state.userid);
+
+        ReactGA.event({
+          category: 'User',
+          action: 'Create an account'
+        });
       }
     });
   }
