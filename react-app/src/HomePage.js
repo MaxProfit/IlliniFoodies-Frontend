@@ -31,6 +31,7 @@ class Feed extends React.Component {
 
     return (
       <div
+        key={this.props.rating.RatingId}
         className={
           "feed-wrapper d-flex" +
           (this.props.side === "left" ? " left-wrapper" : " right-wrapper")

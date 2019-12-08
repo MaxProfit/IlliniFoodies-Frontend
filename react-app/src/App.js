@@ -22,6 +22,13 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
+import ReactGA from "react-ga";
+
+function initializeReactGA() {
+  ReactGA.initialize('UA-139124956-2');
+  ReactGA.pageview('/homepage');
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -104,20 +111,22 @@ class App extends React.Component {
   }
 
   getRatings(userId) {
-    var url = "https://api.illinifoodies.xyz/ratings";
-    if (url !== null) {
-      url += "/loggedin/" + userId;
-    }
-    axiosRequest({
-      type: "get",
-      url: url,
-      data: {},
-      onSuccess: response => {
-        if (response.data !== undefined) {
-          this.setState({ ratingList: response.data });
-        }
+    if (userId != null) {
+      var url = "https://api.illinifoodies.xyz/ratings";
+      if (url !== null) {
+        url += "/loggedin/" + userId;
       }
-    });
+      axiosRequest({
+        type: "get",
+        url: url,
+        data: {},
+        onSuccess: response => {
+          if (response.data !== undefined) {
+            this.setState({ ratingList: response.data });
+          }
+        }
+      });
+    }
   }
 
   signIn(userId) {
@@ -261,6 +270,7 @@ class App extends React.Component {
         this.setState({
           following: response.data.Responses.IlliniFoodiesUserTable
         });
+        this.getRatings(this.state.user.Id);
       }
     });
   }
@@ -277,6 +287,8 @@ class App extends React.Component {
       data: {},
       onSuccess: response => {
         this.setState({ databaseIsNapping: false });
+
+        initializeReactGA(); // init google analytics
       },
       onFail: error => {
         this.setState({ databaseIsNapping: true });
@@ -366,14 +378,19 @@ class App extends React.Component {
 
   render() {
     if (this.state.databaseIsNapping) {
-      return <div className="database-napping">
-        <div className="d-flex flex-column pl-5 pr-5 align-items-center">
-          <h1>Hey there! Thanks for visiting Illini Foodies! </h1>
-          <h1>Our database is napping due to low activity. </h1>
-          <img src={require("./images/database-napping.png")} alt="Database napping"></img>
-          <h1>Refresh the page a few times to wake it up!</h1>
+      return (
+        <div className="database-napping">
+          <div className="d-flex flex-column pl-5 pr-5 align-items-center">
+            <h1>Hey there! Thanks for visiting Illini Foodies! </h1>
+            <h1>Our database is napping due to low activity. </h1>
+            <img
+              src={require("./images/database-napping.png")}
+              alt="Database napping"
+            ></img>
+            <h1>Refresh the page a few times to wake it up!</h1>
           </div>
-        </div>;
+        </div>
+      );
     }
 
     // map the navbar links to link components for rendering
