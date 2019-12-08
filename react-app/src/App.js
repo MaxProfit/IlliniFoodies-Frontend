@@ -263,6 +263,7 @@ class App extends React.Component {
         this.setState({
           following: response.data.Responses.IlliniFoodiesUserTable
         });
+        this.getRatings(this.state.user.Id);
       }
     });
   }
