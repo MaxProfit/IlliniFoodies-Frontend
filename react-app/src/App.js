@@ -290,7 +290,7 @@ class App extends React.Component {
 
         initializeReactGA(); // init google analytics
       },
-      onFail: error => {
+      onError: error => {
         this.setState({ databaseIsNapping: true });
       }
     });
