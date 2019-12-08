@@ -1,7 +1,7 @@
 import React from "react";
 import { InfoCard } from "./InfoCard";
 import Rating from "./Rating";
-import "./App.css";
+import "./styles/App.css";
 
 class InfoBar extends React.Component {
   render() {

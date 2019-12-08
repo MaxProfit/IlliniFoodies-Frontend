@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import "./styles/App.css";
 
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -27,6 +27,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      databaseIsNapping: false,
       user: null, // the current user's info
       following: [], // contains user objects for the users that the current user is following, not just ids
       links: ["Home", "About"], // non user-specific navbar links
@@ -53,7 +54,9 @@ class App extends React.Component {
     this.saveSettingsChanges = this.saveSettingsChanges.bind(this);
     this.createUserNavItem = this.createUserNavItem.bind(this);
 
-    this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(this);
+    this.handleSettingsSnackbarClose = this.handleSettingsSnackbarClose.bind(
+      this
+    );
 
     this.handleSettingsNicknameChange = this.handleSettingsNicknameChange.bind(
       this
@@ -221,40 +224,6 @@ class App extends React.Component {
 
   // update the users friend list
   follow(anotherUserID, userBlurbCallback) {
-    // create a copy of the following array since we don't want to
-    // update the state unless the server update goes through
-    // let followingCopy = this.state.user.Following.slice(
-    //   0,
-    //   this.state.user.Following.length
-    // );
-    // followingCopy.push(anotherUserID);
-
-    // // updated user data
-    // let updatedUser = {
-    //   Id: this.state.user.Id,
-    //   PriceMin: this.state.user.PriceMin,
-    //   PriceMax: this.state.user.PriceMax,
-    //   Nickname: this.state.user.Nickname,
-    //   Picture: this.state.user.Picture,
-    //   Following: followingCopy, // only this has changed
-    //   FavoriteRestaurants: this.state.user.FavoriteRestaurants,
-    // };
-
-    // axiosRequest({
-    //   type: "put",
-    //   url: "https://api.illinifoodies.xyz/user/" + this.state.user.Id,
-    //   data: updatedUser,
-    //   onSuccess: response => {
-    //     this.setState({ user: updatedUser });
-
-    //     // callback to update user blurb UI
-    //     userBlurbCallback();
-
-    //     // update the array of users that the current user is following
-    //     this.refreshFollowing();
-    //   }
-    // });
-
     axiosRequest({
       type: "put",
       url:
@@ -263,7 +232,6 @@ class App extends React.Component {
         "/following/" +
         anotherUserID,
       onSuccess: response => {
-        // this.setState({ user: updatedUser });
         var following = this.state.following;
         following.push(anotherUserID);
         this.setState({
@@ -307,6 +275,12 @@ class App extends React.Component {
       type: "get",
       url: "https://api.illinifoodies.xyz/ratings",
       data: {},
+      onSuccess: response => {
+        this.setState({ databaseIsNapping: false });
+      },
+      onFail: error => {
+        this.setState({ databaseIsNapping: true });
+      }
     });
 
     let userid = getCookie("userid");
@@ -386,12 +360,22 @@ class App extends React.Component {
     });
   }
 
-
   handleSettingsSnackbarClose() {
     this.setState({ settingsSnackbarOpenAdd: false });
   }
 
   render() {
+    if (this.state.databaseIsNapping) {
+      return <div className="database-napping">
+        <div className="d-flex flex-column pl-5 pr-5 align-items-center">
+          <h1>Hey there! Thanks for visiting Illini Foodies! </h1>
+          <h1>Our database is napping due to low activity. </h1>
+          <img src={require("./images/database-napping.png")} alt="Database napping"></img>
+          <h1>Refresh the page a few times to wake it up!</h1>
+          </div>
+        </div>;
+    }
+
     // map the navbar links to link components for rendering
     var navLinks = this.state.links.map(function(name) {
       return (

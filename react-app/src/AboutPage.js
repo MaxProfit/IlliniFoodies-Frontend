@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import "./App.css";
+import "./styles/App.css";
 
 class AboutPage extends React.Component {
   constructor(props) {
@@ -8,28 +8,28 @@ class AboutPage extends React.Component {
     this.developers = {
       Roshini: {
         name: "Roshini Saravanakumar",
-        role: "Front-End, UI/UX, Data Visualization, APIs",
+        role: "Full Stack, UI/UX + Design, AWS",
         github: "https://github.com/roshinis78",
         website: "https://roshinis78.github.io/my-website",
         picture: "./images/roshini-profile.jpg"
       },
       Eunice: {
         name: "Eunice Zhou",
-        role: "Front-End, UI/UX",
+        role: "Front-End, UI/UX, MaterialUI",
         github: "https://github.com/eunicornbread",
         website: "#",
         picture: "./images/eunice-profile.jpg"
       },
       Matthew: {
         name: "Matthew Williams",
-        role: "Back-End, AWS, Architect",
+        role: "Back-End, AWS, Web Architect",
         github: "https://github.com/MaxProfit",
         website: "#",
         picture: "./images/matthew-profile.jpg"
       },
       Sam: {
         name: "Samuel Dovgin",
-        role: "Back-End",
+        role: "Back-End, AWS, RDS",
         github: "https://github.com/SamuelDovgin",
         website: "#",
         picture: "./images/sam-profile.jpg"
@@ -39,12 +39,9 @@ class AboutPage extends React.Component {
 
   render() {
     return (
-      <div>
-        <header
-          className="custom-jumbotron bg-sunkist text-white text-center align-items-center mb-3"
-          style={{ "margin-top": "6em", "height": "300px" }}
-        >
-          <h1 className="mt-3 mb-4">Meet the Developers!</h1>
+      <div className="bg-dark about-page">
+        <header className="about-page-header pt-5 mb-3">
+          <h1 className="mb-4">Meet the Developers!</h1>
           <a
             className="btn btn-social btn-github text-white"
             href="https://github.com/MaxProfit/IlliniFoodies-Frontend"
@@ -55,7 +52,7 @@ class AboutPage extends React.Component {
           </a>
         </header>
 
-        <div className="d-flex flex-wrap justify-content-center align-items-center h-100">
+        <div className="d-flex flex-wrap justify-content-center">
           <DeveloperCard dev={this.developers["Roshini"]}></DeveloperCard>
           <DeveloperCard dev={this.developers["Matthew"]}></DeveloperCard>
           <DeveloperCard dev={this.developers["Eunice"]}></DeveloperCard>
@@ -69,7 +66,7 @@ class AboutPage extends React.Component {
 class DeveloperCard extends React.Component {
   render() {
     return (
-      <Card style={{ width: "350px" }} className="ml-2 mb-2 bg-dark text-white">
+      <Card className="about-page-card ml-2 btn-github text-white">
         <Card.Header className="text-center">
           <h4>{this.props.dev.name}</h4>
           <i>{this.props.dev.role}</i>

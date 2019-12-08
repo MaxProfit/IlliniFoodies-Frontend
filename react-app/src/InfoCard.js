@@ -1,5 +1,5 @@
 import React from "react";
-import "./InfoCard.css";
+import "./styles/InfoCard.css";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import RateReviewIcon from "@material-ui/icons/RateReview";

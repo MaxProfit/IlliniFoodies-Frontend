@@ -1,6 +1,6 @@
 import React from "react";
 import InfoBar from "./InfoBar";
-import "./HomePage.scss";
+import "./styles/HomePage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -693,7 +693,7 @@ class HomePage extends React.Component {
             </div>
           )}
 
-          {this.state.active === "like" && (
+          {(this.state.active === "like") && (this.props.user !== null) && (
             <div className="text-center">
               <h2 className="page-head">- Your Favorites -</h2>
               <InfoBar
@@ -707,7 +707,14 @@ class HomePage extends React.Component {
             </div>
           )}
 
-          {this.state.active === "follow" && (
+          {(this.state.active === "like") && (this.props.user === null) && (
+            <div className="text-center">
+              <h2 className="page-head">- Your Favorites -</h2>
+              <p className="text-help"><i>Please sign in to view favorites!</i></p>
+            </div>
+          )}
+
+          {(this.state.active === "follow") && (this.props.user !== null) && (
             <div className="text-center">
               <h2 className="page-head">- Your Feed -</h2>
               <FeedPage
@@ -716,6 +723,13 @@ class HomePage extends React.Component {
                 refreshFavorites={this.props.refreshFavorites}
                 refreshRatings={this.props.refreshRatings}
               />
+            </div>
+          )}
+
+          {(this.state.active === "follow") && (this.props.user === null) && (
+            <div className="text-center">
+              <h2 className="page-head">- Your Feed -</h2>
+              <p className="text-help"><i>Please sign in to view your feed!</i></p>
             </div>
           )}
 
